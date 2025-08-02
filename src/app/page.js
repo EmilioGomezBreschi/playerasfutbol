@@ -19,7 +19,7 @@ export default function Home() {
     setIsSearching(true);
     try {
       // Buscar en todas las categorías disponibles
-      const response = await fetch(`/api/camisas?categorias=RETRO,AFICIONADO 1,AFICIONADO 2&search=${encodeURIComponent(searchTerm)}&limit=20`);
+      const response = await fetch(`/api/camisas?categorias=JUGADOR,JUGADOR2,RETRO,AFICIONADO 1,AFICIONADO 2&search=${encodeURIComponent(searchTerm)}&limit=20`);
       if (response.ok) {
         const data = await response.json();
         setSearchResults(data);
@@ -39,7 +39,7 @@ export default function Home() {
       color: 'blue',
       categorias: ['JUGADOR', 'JUGADOR2'],
       emoji: '⭐',
-      disponible: false // Cambiar a true cuando tengas camisas
+      disponible: true
     },
     {
       id: 'retro',

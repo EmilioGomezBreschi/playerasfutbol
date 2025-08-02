@@ -61,8 +61,8 @@ CamisaSchema.methods.getImagenPrincipal = function() {
     return null;
   }
   
-  // Para camisas RETRO, usar la penúltima imagen como principal
-  if (this.categoria === 'RETRO') {
+  // Para camisas RETRO, JUGADOR y JUGADOR2, usar la penúltima imagen como principal
+  if (this.categoria === 'RETRO' || this.categoria === 'JUGADOR' || this.categoria === 'JUGADOR2') {
     // Si hay al menos 2 imágenes, devolver la penúltima
     if (this.imagenes.length >= 2) {
       return this.imagenes[this.imagenes.length - 2];
