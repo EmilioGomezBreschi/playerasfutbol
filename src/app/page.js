@@ -12,10 +12,10 @@ export default function Home() {
       </div>
       <div className="flex md:flex-row flex-col justify-around w-auto md:w-full md:space-x-7 space-y-7 md:space-y-0 grow">
         <button
-          className="flex flex-col w-full rounded-lg border cursor-pointer min-h-full"
+          className="flex flex-col w-full rounded-lg border cursor-pointer min-h-full max-h-80 md:max-h-full overflow-hidden"
           onClick={() => (window.location.href = "/retro")}
         >
-          <div className="group flex-1 flex justify-center items-center md:h-full rounded-lg bg-red-500/70 hover:bg-red-500 transition-all duration-300">
+          <div className="group flex-1 flex justify-center items-center h-40 rounded-t-lg bg-red-500/70 hover:bg-red-500 transition-all duration-300">
             <Image
               src="/images/shirt.svg"
               alt="Playera de Fútbol"
@@ -24,13 +24,16 @@ export default function Home() {
               className="opacity-70 group-hover:opacity-100 group-hover:scale-115 transition-transform duration-300 ease-out"
             />
           </div>
-          <h3 className="text-start text-lg font-bold p-7">Camisas Retro</h3>
+          <h3 className="text-start text-sm font-bold p-4 h-20 flex items-center">
+            Camisas Retro
+          </h3>
         </button>
+
         <button
-          className="flex flex-col w-full rounded-lg border cursor-pointer min-h-full"
+          className="flex flex-col w-full rounded-lg border cursor-pointer min-h-full max-h-80 md:max-h-full overflow-hidden"
           onClick={() => (window.location.href = "/jugador")}
         >
-          <div className="group flex-1 flex justify-center items-center md:h-full rounded-lg bg-yellow-500/70 hover:bg-yellow-500 transition-all duration-300">
+          <div className="group flex-1 flex justify-center items-center h-40 rounded-t-lg bg-yellow-500/70 hover:bg-yellow-500 transition-all duration-300">
             <Image
               src="/images/shirt.svg"
               alt="Playera de Fútbol"
@@ -39,15 +42,15 @@ export default function Home() {
               className="opacity-70 group-hover:opacity-100 group-hover:scale-115 transition-transform duration-300 ease-out"
             />
           </div>
-          <h3 className="text-start text-lg font-bold p-7">
+          <h3 className="text-start text-sm font-bold p-7">
             Camisas de Jugador
           </h3>
         </button>
         <button
-          className="flex flex-col w-full rounded-lg border cursor-pointer min-h-full"
+          className="flex flex-col w-full rounded-lg border cursor-pointer min-h-full max-h-80 md:max-h-full overflow-hidden"
           onClick={() => (window.location.href = "/aficionado")}
         >
-          <div className="group flex-1 flex justify-center items-center md:h-full rounded-lg bg-blue-900/70 hover:bg-blue-900 transition-all duration-300">
+          <div className="group flex-1 flex justify-center items-center h-40 rounded-t-lg bg-blue-900/70 hover:bg-blue-900 transition-all duration-300">
             <Image
               src="/images/shirt.svg"
               alt="Playera de Fútbol"
@@ -56,12 +59,12 @@ export default function Home() {
               className="opacity-70 group-hover:opacity-100 group-hover:scale-115 transition-transform duration-300 ease-out"
             />
           </div>
-          <h3 className="text-start text-lg font-bold p-7">
+          <h3 className="text-start text-sm font-bold p-7">
             Camisas de Aficionado
           </h3>
         </button>
       </div>
-      <footer className="mt-8 text-center text-sm text-black flex flex-row justify-around w-full">
+      <footer className="mt-8 text-center text-sm flex flex-row justify-around w-full">
         <div className="flex items-center flex-col space-y-3">
           <div className="w-15 h-15 bg-red-500/70 rounded-full flex justify-center items-center">
             <Image
