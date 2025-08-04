@@ -352,13 +352,13 @@ export default function CamisasAficionado() {
               setError(null);
               fetchCamisas(currentPage, searchTerm, false);
             }}
-            className="w-full bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors"
+            className="w-full bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors cursor-pointer"
           >
             Reintentar
           </button>
           <Link
             href="/"
-            className="block w-full bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 transition-colors"
+            className="block w-full bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 transition-colors cursor-pointer"
           >
             Volver al inicio
           </Link>
@@ -457,7 +457,7 @@ export default function CamisasAficionado() {
                   className={`p-2 ${
                     viewMode === "grid"
                       ? "bg-green-500 text-white"
-                      : "text-gray-500 hover:text-gray-700"
+                      : "text-gray-500 hover:text-gray-700 cursor-pointer"
                   }`}
                   title="Vista en cuadrícula"
                 >
@@ -474,7 +474,7 @@ export default function CamisasAficionado() {
                   className={`p-2 ${
                     viewMode === "list"
                       ? "bg-green-500 text-white"
-                      : "text-gray-500 hover:text-gray-700"
+                      : "text-gray-500 hover:text-gray-700 cursor-pointer"
                   }`}
                   title="Vista en lista"
                 >
@@ -513,7 +513,7 @@ export default function CamisasAficionado() {
               {searchTerm && (
                 <button
                   onClick={() => handleSearch("")}
-                  className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors"
+                  className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors cursor-pointer"
                 >
                   Ver todas las camisas
                 </button>

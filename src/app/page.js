@@ -6,28 +6,70 @@ import Image from "next/image";
 import SearchBar from "../components/SearchBar";
 
 export default function Home() {
+  const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState(null);
+  const [allResults, setAllResults] = useState([]);
+  const [page, setPage] = useState(1);
   const [isSearching, setIsSearching] = useState(false);
 
-  const handleGlobalSearch = useCallback(async (searchTerm) => {
-    if (!searchTerm.trim()) {
-      setSearchResults(null);
-      return;
-    }
+  const fetchPage = useCallback(async (term, pageNum) => {
+    const res = await fetch(
+      `/api/camisas?categorias=JUGADOR,JUGADOR2,RETRO,AFICIONADO%201,AFICIONADO%202` +
+        `&search=${encodeURIComponent(term)}` +
+        `&limit=20&page=${pageNum}`
+    );
+    if (!res.ok) throw new Error("Fetch failed");
+    return res.json();
+  }, []);
+
+  const handleGlobalSearch = useCallback(
+    async (term) => {
+      setSearchTerm(term);
+      if (!term.trim()) {
+        setSearchResults(null);
+        setAllResults([]);
+        setPage(1);
+        return;
+      }
+      setIsSearching(true);
+      try {
+        const data = await fetchPage(term, 1);
+        setSearchResults(data);
+        setAllResults(data.camisas);
+        setPage(1);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setIsSearching(false);
+      }
+    },
+    [fetchPage]
+  );
+
+  const loadMore = useCallback(async () => {
+    const next = page + 1;
     setIsSearching(true);
     try {
-      const res = await fetch(
-        `/api/camisas?categorias=JUGADOR,JUGADOR2,RETRO,AFICIONADO%201,AFICIONADO%202&search=${encodeURIComponent(
-          searchTerm
-        )}&limit=20`
-      );
-      if (res.ok) setSearchResults(await res.json());
+      const data = await fetchPage(searchTerm, next);
+      setAllResults((prev) => [...prev, ...data.camisas]);
+      setPage(next);
+      setSearchResults((prev) => ({
+        ...prev,
+        pagination: data.pagination,
+      }));
     } catch (e) {
       console.error(e);
     } finally {
       setIsSearching(false);
     }
-  }, []);
+  }, [fetchPage, page, searchTerm]);
+
+  // Define el mapeo de colores
+  const badgeColors = {
+    RETRO: "bg-purple-600",
+    JUGADOR: "bg-blue-600",
+    AFICIONADO: "bg-green-600",
+  };
 
   return (
     <main className="flex min-h-screen flex-col items-center p-5 pb-10">
@@ -39,31 +81,32 @@ export default function Home() {
         </p>
       </div>
 
-      {/* SearchBar SIEMPRE VISIBLE */}
+      {/* SearchBar */}
       <div className="w-full max-w-md mb-8 border rounded-md shadow-md">
         <SearchBar
           onSearch={handleGlobalSearch}
           placeholder="Buscar camisas en todo el catálogo..."
           className="w-full"
-        ></SearchBar>
+        />
       </div>
 
-      {/* Mientras busca */}
+      {/* Loading indicator */}
       {isSearching && <p className="text-gray-500 mb-6">Buscando camisas…</p>}
 
-      {/* Si hay resultados, muestro sólo la grilla de resultados */}
+      {/* Search Results */}
       {searchResults ? (
         <div className="w-full max-w-7xl">
-          <h3 className="text-lg font-semibold text-gray-900 mb-8">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
             {searchResults.pagination?.totalCamisas || 0} resultados encontrados
           </h3>
-          {searchResults.camisas.length > 0 ? (
-            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 m-7">
-              {searchResults.camisas.map((c, i) => (
+
+          {allResults.length > 0 ? (
+            <div className="grid gap-4 gap-y-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 m-7">
+              {allResults.map((c, i) => (
                 <Link
                   key={i}
                   href={`/camisa/${encodeURIComponent(c.subcategoria)}`}
-                  className="group block"
+                  className="group block mb-6"
                 >
                   <div className="bg-gray-50 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
                     <div className="aspect-square relative">
@@ -73,11 +116,19 @@ export default function Home() {
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                       <span
-                        className={`absolute top-2 left-2 text-xs px-2 py-1 rounded-full text-white ${
-                          c.categoria === "RETRO"
-                            ? "bg-purple-600"
-                            : "bg-green-600"
-                        }`}
+                        className={`
+                          absolute top-2 left-2
+                          text-xs px-2 py-1
+                          rounded-full text-white
+                          ${
+                            c.categoria === "RETRO"
+                              ? "bg-purple-600"
+                              : c.categoria === "JUGADOR" ||
+                                c.categoria === "JUGADOR2"
+                              ? "bg-blue-600"
+                              : "bg-green-600"
+                          }
+                        `}
                       >
                         {c.categoria}
                       </span>
@@ -96,9 +147,23 @@ export default function Home() {
               No se encontraron camisas
             </p>
           )}
+
+          {/* Load More */}
+          {allResults.length < searchResults.pagination.totalCamisas && (
+            <div className="text-center mt-6">
+              <button
+                onClick={loadMore}
+                disabled={isSearching}
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+              >
+                {isSearching ? "Cargando..." : "Cargar más"}
+              </button>
+            </div>
+          )}
         </div>
       ) : (
         <>
+          {/* Category Buttons */}
           <div className="flex md:flex-row flex-col justify-around w-auto md:w-full md:space-x-7 space-y-7 md:space-y-0 grow">
             <button
               className="flex flex-col w-full rounded-lg border cursor-pointer min-h-80 overflow-hidden"
@@ -135,6 +200,7 @@ export default function Home() {
                 Camisas de Jugador
               </h3>
             </button>
+
             <button
               className="flex flex-col w-full rounded-lg border cursor-pointer min-h-80 overflow-hidden"
               onClick={() => (window.location.href = "/aficionado")}
@@ -158,7 +224,7 @@ export default function Home() {
               <div className="w-15 h-15 bg-purple-700/70 rounded-full flex justify-center items-center">
                 <Image
                   src="/images/shirtorange.svg"
-                  alt="Playera de Fútbol"
+                  alt="Retro Auténticas"
                   width={40}
                   height={40}
                   className="opacity-70 group-hover:opacity-100 group-hover:scale-115 transition-transform duration-300 ease-out"
@@ -175,7 +241,7 @@ export default function Home() {
               <div className="w-15 h-15 bg-blue-900/70 rounded-full flex justify-center items-center">
                 <Image
                   src="/images/star.svg"
-                  alt="Playera de Fútbol"
+                  alt="Calidad Jugador"
                   width={40}
                   height={40}
                   className="opacity-70 group-hover:opacity-100 group-hover:scale-115 transition-transform duration-300 ease-out"
@@ -192,7 +258,7 @@ export default function Home() {
               <div className="w-15 h-15 bg-green-500/70 rounded-full flex justify-center items-center">
                 <Image
                   src="/images/heart.svg"
-                  alt="Playera de Fútbol"
+                  alt="Para aficionados"
                   width={40}
                   height={40}
                   className="opacity-70 group-hover:opacity-100 group-hover:scale-115 transition-transform duration-300 ease-out"

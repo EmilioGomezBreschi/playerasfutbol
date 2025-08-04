@@ -178,7 +178,7 @@ export default function DetalleCamisa() {
             ${
               isSelected
                 ? "scale-110 z-10 border-" + colorClasses + "-500"
-                : "border-gray-200 hover:scale-105 hover:z-20 hover:border-gray-300"
+                : "border-gray-200 hover:scale-105 cursor-pointer hover:z-20 hover:border-gray-300"
             }
           `}
                     >
@@ -245,11 +245,11 @@ export default function DetalleCamisa() {
             <div className="border-t pt-6">
               <div className="space-y-3">
                 <button
-                  className={`w-full bg-${colorClasses}-600 text-white py-3 px-6 rounded-md hover:bg-${colorClasses}-700 transition-colors font-medium`}
+                  className={`w-full bg-green-600 text-white py-3 px-6 rounded-md hover:bg-green-700 transition-colors font-medium cursor-pointer`}
                 >
                   Contactar para más información
                 </button>
-                <button className="w-full border border-gray-300 text-gray-700 py-3 px-6 rounded-md hover:bg-gray-50 transition-colors font-medium">
+                <button className="w-full border border-gray-300 text-gray-700 py-3 px-6 rounded-md hover:bg-gray-50 transition-colors font-medium cursor-pointer">
                   Compartir producto
                 </button>
               </div>

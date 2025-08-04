@@ -349,13 +349,13 @@ export default function CamisasRetro() {
               setError(null);
               fetchCamisas(currentPage, searchTerm, false);
             }}
-            className="w-full bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition-colors"
+            className="w-full bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition-colors cursor-pointer"
           >
             Reintentar
           </button>
           <Link
             href="/"
-            className="block w-full bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 transition-colors"
+            className="block w-full bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 transition-colors cursor-pointer"
           >
             Volver al inicio
           </Link>
@@ -438,7 +438,7 @@ export default function CamisasRetro() {
                 <select
                   value={itemsPerPage}
                   onChange={(e) => setItemsPerPage(parseInt(e.target.value))}
-                  className="text-sm border border-gray-300 rounded-md px-2 py-1 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                  className="text-sm border border-gray-300 rounded-md px-2 py-1 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 cursor-pointer"
                 >
                   <option value={25}>25</option>
                   <option value={50}>50</option>
@@ -454,7 +454,7 @@ export default function CamisasRetro() {
                   className={`p-2 ${
                     viewMode === "grid"
                       ? "bg-purple-500 text-white"
-                      : "text-gray-500 hover:text-gray-700"
+                      : "text-gray-500 hover:text-gray-700 cursor-pointer"
                   }`}
                   title="Vista en cuadrícula"
                 >
@@ -471,7 +471,7 @@ export default function CamisasRetro() {
                   className={`p-2 ${
                     viewMode === "list"
                       ? "bg-purple-500 text-white"
-                      : "text-gray-500 hover:text-gray-700"
+                      : "text-gray-500 hover:text-gray-700 cursor-pointer"
                   }`}
                   title="Vista en lista"
                 >
@@ -514,7 +514,7 @@ export default function CamisasRetro() {
                   </p>
                   <button
                     onClick={() => handleSearch("")}
-                    className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition-colors"
+                    className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition-colors cursor-pointer"
                   >
                     Ver todas las camisas
                   </button>

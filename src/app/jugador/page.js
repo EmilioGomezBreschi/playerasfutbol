@@ -350,13 +350,13 @@ export default function CamisasJugador() {
               setError(null);
               fetchCamisas(currentPage, searchTerm, false);
             }}
-            className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+            className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors cursor-pointer"
           >
             Reintentar
           </button>
           <Link
             href="/"
-            className="block w-full bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 transition-colors"
+            className="block w-full bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 transition-colors cursor-pointer"
           >
             Volver al inicio
           </Link>
@@ -439,7 +439,7 @@ export default function CamisasJugador() {
                 <select
                   value={itemsPerPage}
                   onChange={(e) => setItemsPerPage(parseInt(e.target.value))}
-                  className="text-sm border border-gray-300 rounded-md px-2 py-1 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="text-sm border border-gray-300 rounded-md px-2 py-1 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"
                 >
                   <option value={25}>25</option>
                   <option value={50}>50</option>
@@ -455,7 +455,7 @@ export default function CamisasJugador() {
                   className={`p-2 ${
                     viewMode === "grid"
                       ? "bg-blue-500 text-white"
-                      : "text-gray-500 hover:text-gray-700"
+                      : "text-gray-500 hover:text-gray-700 cursor-pointer"
                   }`}
                   title="Vista en cuadrícula"
                 >
@@ -472,7 +472,7 @@ export default function CamisasJugador() {
                   className={`p-2 ${
                     viewMode === "list"
                       ? "bg-blue-500 text-white"
-                      : "text-gray-500 hover:text-gray-700"
+                      : "text-gray-500 hover:text-gray-700 cursor-pointer"
                   }`}
                   title="Vista en lista"
                 >
@@ -509,12 +509,17 @@ export default function CamisasJugador() {
           <div className="text-center py-20">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 max-w-md mx-auto">
               {searchTerm && (
-                <button
-                  onClick={() => handleSearch("")}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
-                >
-                  Ver todas las camisas
-                </button>
+                <>
+                  <p className="text-gray-600 mb-4">
+                    No se encontraron camisas de jugador para "{searchTerm}".
+                  </p>
+                  <button
+                    onClick={() => handleSearch("")}
+                    className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors cursor-pointer"
+                  >
+                    Ver todas las camisas
+                  </button>
+                </>
               )}
             </div>
           </div>
