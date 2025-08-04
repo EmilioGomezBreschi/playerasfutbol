@@ -30,9 +30,9 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-5">
+    <main className="flex min-h-screen flex-col items-center p-5 pb-10">
       {/* Header */}
-      <div className="text-center mb-8">
+      <div className="text-center mb-2">
         <h1 className="text-4xl font-bold mb-2">Retro Clásicas</h1>
         <p className="text-lg font-light mb-4">
           Camisas históricas y vintage de épocas doradas del fútbol
@@ -40,12 +40,12 @@ export default function Home() {
       </div>
 
       {/* SearchBar SIEMPRE VISIBLE */}
-      <div className="w-full max-w-md mb-8">
+      <div className="w-full max-w-md mb-8 border rounded-md shadow-md">
         <SearchBar
           onSearch={handleGlobalSearch}
           placeholder="Buscar camisas en todo el catálogo..."
           className="w-full"
-        />
+        ></SearchBar>
       </div>
 
       {/* Mientras busca */}
@@ -101,7 +101,7 @@ export default function Home() {
         <>
           <div className="flex md:flex-row flex-col justify-around w-auto md:w-full md:space-x-7 space-y-7 md:space-y-0 grow">
             <button
-              className="flex flex-col w-full rounded-lg border cursor-pointer min-h-full max-h-80 md:max-h-full overflow-hidden"
+              className="flex flex-col w-full rounded-lg border cursor-pointer min-h-80 overflow-hidden"
               onClick={() => (window.location.href = "/retro")}
             >
               <div className="group flex-1 flex justify-center items-center h-40 rounded-t-lg bg-red-500/70 hover:bg-red-500 transition-all duration-300">
@@ -119,7 +119,7 @@ export default function Home() {
             </button>
 
             <button
-              className="flex flex-col w-full rounded-lg border cursor-pointer min-h-full max-h-80 md:max-h-full overflow-hidden"
+              className="flex flex-col w-full rounded-lg border cursor-pointer min-h-80 overflow-hidden"
               onClick={() => (window.location.href = "/jugador")}
             >
               <div className="group flex-1 flex justify-center items-center h-40 rounded-t-lg bg-yellow-500/70 hover:bg-yellow-500 transition-all duration-300">
@@ -136,7 +136,7 @@ export default function Home() {
               </h3>
             </button>
             <button
-              className="flex flex-col w-full rounded-lg border cursor-pointer min-h-full max-h-80 md:max-h-full overflow-hidden"
+              className="flex flex-col w-full rounded-lg border cursor-pointer min-h-80 overflow-hidden"
               onClick={() => (window.location.href = "/aficionado")}
             >
               <div className="group flex-1 flex justify-center items-center h-40 rounded-t-lg bg-blue-900/70 hover:bg-blue-900 transition-all duration-300">

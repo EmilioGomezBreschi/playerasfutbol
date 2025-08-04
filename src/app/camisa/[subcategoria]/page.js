@@ -103,18 +103,41 @@ export default function DetalleCamisa() {
         {/* Breadcrumb */}
         <div className="mb-8">
           <nav className="flex space-x-2 text-sm text-gray-500 mb-4">
-            <Link href="/" className={`hover:text-${colorClasses}-600`}>Inicio</Link>
-            <span>/</span>
-            <Link href={rutaCategoria} className={`hover:text-${colorClasses}-600`}>
-              {data.categoria === 'RETRO' ? 'Retro' : 'Aficionado'}
+            <Link
+              href="/"
+              className={`hover:text-${colorClasses}-600`}
+            >
+              Inicio
             </Link>
             <span>/</span>
-            <span className="text-gray-900 font-medium">{data.subcategoria}</span>
+            <Link
+              href={rutaCategoria}
+              className={`hover:text-${colorClasses}-600`}
+            >
+              {data.categoria === "RETRO" ? "Retro" : "Aficionado"}
+            </Link>
+            <span>/</span>
+            <span className="text-gray-900 font-medium">
+              {data.subcategoria}
+            </span>
           </nav>
 
-          <Link href={rutaCategoria} className={`inline-flex items-center text-${colorClasses}-600 hover:text-${colorClasses}-800 mb-4`}>
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          <Link
+            href={rutaCategoria}
+            className={`inline-flex items-center text-${colorClasses}-600 hover:text-${colorClasses}-800 mb-4`}
+          >
+            <svg
+              className="w-5 h-5 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
             </svg>
             Volver a la categoría
           </Link>
@@ -138,25 +161,37 @@ export default function DetalleCamisa() {
             {/* Miniaturas */}
             {data.images.length > 1 && (
               <div className="grid grid-cols-4 gap-2">
-                {data.images.map((imagen, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setImagenSeleccionada(index)}
-                    className={`aspect-square relative overflow-hidden rounded-md border-2 transition-all ${
-                      index === imagenSeleccionada 
-                        ? `border-${colorClasses}-500` 
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    <Image
-                      src={imagen.imageUrl}
-                      alt={`${data.subcategoria} - Miniatura ${index + 1}`}
-                      fill
-                      className="object-cover"
-                      sizes="200px"
-                    />
-                  </button>
-                ))}
+                {data.images.map((imagen, index) => {
+                  const isSelected = index === imagenSeleccionada;
+                  return (
+                    <button
+                      key={index}
+                      onClick={() => setImagenSeleccionada(index)}
+                      className={`
+            relative
+            aspect-square
+            overflow-hidden
+            rounded-md
+            border-2
+            transform
+            transition-all
+            ${
+              isSelected
+                ? "scale-110 z-10 border-" + colorClasses + "-500"
+                : "border-gray-200 hover:scale-105 hover:z-20 hover:border-gray-300"
+            }
+          `}
+                    >
+                      <Image
+                        src={imagen.imageUrl}
+                        alt={`${data.subcategoria} - Miniatura ${index + 1}`}
+                        fill
+                        className="object-cover"
+                        sizes="200px"
+                      />
+                    </button>
+                  );
+                })}
               </div>
             )}
           </div>
@@ -164,7 +199,9 @@ export default function DetalleCamisa() {
           {/* Información del Producto */}
           <div className="space-y-6">
             <div>
-              <div className={`inline-block bg-${colorClasses}-100 text-${colorClasses}-800 text-xs px-3 py-1 rounded-full font-medium mb-3`}>
+              <div
+                className={`inline-block bg-${colorClasses}-100 text-${colorClasses}-800 text-xs px-3 py-1 rounded-full font-medium mb-3`}
+              >
                 {data.categoria}
               </div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -177,7 +214,9 @@ export default function DetalleCamisa() {
 
             {/* Información adicional */}
             <div className="border-t pt-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Detalles del producto</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Detalles del producto
+              </h3>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-500">Categoría:</span>
@@ -205,7 +244,9 @@ export default function DetalleCamisa() {
             {/* Botones de acción */}
             <div className="border-t pt-6">
               <div className="space-y-3">
-                <button className={`w-full bg-${colorClasses}-600 text-white py-3 px-6 rounded-md hover:bg-${colorClasses}-700 transition-colors font-medium`}>
+                <button
+                  className={`w-full bg-${colorClasses}-600 text-white py-3 px-6 rounded-md hover:bg-${colorClasses}-700 transition-colors font-medium`}
+                >
                   Contactar para más información
                 </button>
                 <button className="w-full border border-gray-300 text-gray-700 py-3 px-6 rounded-md hover:bg-gray-50 transition-colors font-medium">
@@ -215,35 +256,6 @@ export default function DetalleCamisa() {
             </div>
           </div>
         </div>
-
-        {/* Galería completa */}
-        {data.images.length > 1 && (
-          <div className="border-t pt-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Todas las imágenes</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {data.images.map((imagen, index) => (
-                <button
-                  key={index}
-                  onClick={() => setImagenSeleccionada(index)}
-                  className={`aspect-square relative overflow-hidden rounded-lg border-2 transition-all ${
-                    index === imagenSeleccionada 
-                      ? `border-${colorClasses}-500 scale-105` 
-                      : 'border-gray-200 hover:border-gray-300 hover:scale-102'
-                  }`}
-                >
-                  <Image
-                    src={imagen.imageUrl}
-                    alt={`${data.subcategoria} - Imagen ${index + 1}`}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-                  />
-                  <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-10 transition-all"></div>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
