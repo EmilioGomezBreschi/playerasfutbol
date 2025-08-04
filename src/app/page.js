@@ -104,7 +104,7 @@ export default function Home() {
               className="flex flex-col w-full rounded-lg border cursor-pointer min-h-80 overflow-hidden"
               onClick={() => (window.location.href = "/retro")}
             >
-              <div className="group flex-1 flex justify-center items-center h-40 rounded-t-lg bg-red-500/70 hover:bg-red-500 transition-all duration-300">
+              <div className="group flex-1 flex justify-center items-center h-40 rounded-t-lg bg-purple-700/70 hover:bg-purple-700 transition-all duration-300">
                 <Image
                   src="/images/shirt.svg"
                   alt="Playera de Fútbol"
@@ -122,7 +122,7 @@ export default function Home() {
               className="flex flex-col w-full rounded-lg border cursor-pointer min-h-80 overflow-hidden"
               onClick={() => (window.location.href = "/jugador")}
             >
-              <div className="group flex-1 flex justify-center items-center h-40 rounded-t-lg bg-yellow-500/70 hover:bg-yellow-500 transition-all duration-300">
+              <div className="group flex-1 flex justify-center items-center h-40 rounded-t-lg bg-blue-900/70 hover:bg-blue-900 transition-all duration-300">
                 <Image
                   src="/images/shirt.svg"
                   alt="Playera de Fútbol"
@@ -139,7 +139,7 @@ export default function Home() {
               className="flex flex-col w-full rounded-lg border cursor-pointer min-h-80 overflow-hidden"
               onClick={() => (window.location.href = "/aficionado")}
             >
-              <div className="group flex-1 flex justify-center items-center h-40 rounded-t-lg bg-blue-900/70 hover:bg-blue-900 transition-all duration-300">
+              <div className="group flex-1 flex justify-center items-center h-40 rounded-t-lg bg-green-500/70 hover:bg-green-500 transition-all duration-300">
                 <Image
                   src="/images/shirt.svg"
                   alt="Playera de Fútbol"
@@ -155,7 +155,7 @@ export default function Home() {
           </div>
           <footer className="mt-8 text-center text-sm flex flex-row justify-around w-full">
             <div className="flex items-center flex-col space-y-3">
-              <div className="w-15 h-15 bg-red-500/70 rounded-full flex justify-center items-center">
+              <div className="w-15 h-15 bg-purple-700/70 rounded-full flex justify-center items-center">
                 <Image
                   src="/images/shirtorange.svg"
                   alt="Playera de Fútbol"
@@ -172,7 +172,7 @@ export default function Home() {
               </p>
             </div>
             <div className="flex items-center flex-col space-y-3">
-              <div className="w-15 h-15 bg-yellow-500/70 rounded-full flex justify-center items-center">
+              <div className="w-15 h-15 bg-blue-900/70 rounded-full flex justify-center items-center">
                 <Image
                   src="/images/star.svg"
                   alt="Playera de Fútbol"
@@ -189,7 +189,7 @@ export default function Home() {
               </p>
             </div>
             <div className="flex items-center flex-col space-y-3">
-              <div className="w-15 h-15 bg-blue-900/70 rounded-full flex justify-center items-center">
+              <div className="w-15 h-15 bg-green-500/70 rounded-full flex justify-center items-center">
                 <Image
                   src="/images/heart.svg"
                   alt="Playera de Fútbol"
