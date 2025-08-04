@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import SearchBar from "../components/SearchBar";
@@ -11,6 +11,15 @@ export default function Home() {
   const [allResults, setAllResults] = useState([]);
   const [page, setPage] = useState(1);
   const [isSearching, setIsSearching] = useState(false);
+
+  // Cuando searchTerm quede vacío, volvemos al catálogo
+  useEffect(() => {
+    if (searchTerm === "") {
+      setSearchResults(null);
+      setAllResults([]);
+      setPage(1);
+    }
+  }, [searchTerm]);
 
   const fetchPage = useCallback(async (term, pageNum) => {
     const res = await fetch(
@@ -26,10 +35,7 @@ export default function Home() {
     async (term) => {
       setSearchTerm(term);
       if (!term.trim()) {
-        setSearchResults(null);
-        setAllResults([]);
-        setPage(1);
-        return;
+        return; // el useEffect se encargará de resetear
       }
       setIsSearching(true);
       try {
@@ -64,13 +70,6 @@ export default function Home() {
     }
   }, [fetchPage, page, searchTerm]);
 
-  // Define el mapeo de colores
-  const badgeColors = {
-    RETRO: "bg-purple-600",
-    JUGADOR: "bg-blue-600",
-    AFICIONADO: "bg-green-600",
-  };
-
   return (
     <main className="flex min-h-screen flex-col items-center p-5 pb-10">
       {/* Header */}
@@ -81,7 +80,7 @@ export default function Home() {
         </p>
       </div>
 
-      {/* SearchBar */}
+      {/* SearchBar siempre visible */}
       <div className="w-full max-w-md mb-8 border rounded-md shadow-md">
         <SearchBar
           onSearch={handleGlobalSearch}
@@ -90,10 +89,10 @@ export default function Home() {
         />
       </div>
 
-      {/* Loading indicator */}
+      {/* Indicador de búsqueda */}
       {isSearching && <p className="text-gray-500 mb-6">Buscando camisas…</p>}
 
-      {/* Search Results */}
+      {/* Si hay resultados de búsqueda */}
       {searchResults ? (
         <div className="w-full max-w-7xl">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">
@@ -116,19 +115,14 @@ export default function Home() {
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                       <span
-                        className={`
-                          absolute top-2 left-2
-                          text-xs px-2 py-1
-                          rounded-full text-white
-                          ${
-                            c.categoria === "RETRO"
-                              ? "bg-purple-600"
-                              : c.categoria === "JUGADOR" ||
-                                c.categoria === "JUGADOR2"
-                              ? "bg-blue-600"
-                              : "bg-green-600"
-                          }
-                        `}
+                        className={`absolute top-2 left-2 text-xs px-2 py-1 rounded-full text-white ${
+                          c.categoria === "RETRO"
+                            ? "bg-purple-600"
+                            : c.categoria === "JUGADOR" ||
+                              c.categoria === "JUGADOR2"
+                            ? "bg-blue-600"
+                            : "bg-green-600"
+                        }`}
                       >
                         {c.categoria}
                       </span>
@@ -148,7 +142,7 @@ export default function Home() {
             </p>
           )}
 
-          {/* Load More */}
+          {/* Botón “Cargar más” */}
           {allResults.length < searchResults.pagination.totalCamisas && (
             <div className="text-center mt-6">
               <button
@@ -163,7 +157,7 @@ export default function Home() {
         </div>
       ) : (
         <>
-          {/* Category Buttons */}
+          {/* Botones de categoría */}
           <div className="flex md:flex-row flex-col justify-around w-auto md:w-full md:space-x-7 space-y-7 md:space-y-0 grow">
             <button
               className="flex flex-col w-full rounded-lg border cursor-pointer min-h-80 overflow-hidden"
@@ -172,7 +166,7 @@ export default function Home() {
               <div className="group flex-1 flex justify-center items-center h-40 rounded-t-lg bg-purple-700/70 hover:bg-purple-700 transition-all duration-300">
                 <Image
                   src="/images/shirt.svg"
-                  alt="Playera de Fútbol"
+                  alt="Camisas Retro"
                   width={100}
                   height={100}
                   className="opacity-70 group-hover:opacity-100 group-hover:scale-115 transition-transform duration-300 ease-out"
@@ -190,7 +184,7 @@ export default function Home() {
               <div className="group flex-1 flex justify-center items-center h-40 rounded-t-lg bg-blue-900/70 hover:bg-blue-900 transition-all duration-300">
                 <Image
                   src="/images/shirt.svg"
-                  alt="Playera de Fútbol"
+                  alt="Camisas de Jugador"
                   width={100}
                   height={100}
                   className="opacity-70 group-hover:opacity-100 group-hover:scale-115 transition-transform duration-300 ease-out"
@@ -208,7 +202,7 @@ export default function Home() {
               <div className="group flex-1 flex justify-center items-center h-40 rounded-t-lg bg-green-500/70 hover:bg-green-500 transition-all duration-300">
                 <Image
                   src="/images/shirt.svg"
-                  alt="Playera de Fútbol"
+                  alt="Camisas de Aficionado"
                   width={100}
                   height={100}
                   className="opacity-70 group-hover:opacity-100 group-hover:scale-115 transition-transform duration-300 ease-out"
@@ -219,6 +213,8 @@ export default function Home() {
               </h3>
             </button>
           </div>
+
+          {/* Footer */}
           <footer className="mt-8 text-center text-sm flex flex-row justify-around w-full">
             <div className="flex items-center flex-col space-y-3">
               <div className="w-15 h-15 bg-purple-700/70 rounded-full flex justify-center items-center">

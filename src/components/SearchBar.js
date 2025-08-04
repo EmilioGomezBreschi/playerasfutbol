@@ -20,34 +20,27 @@ export default function SearchBar({
   };
 
   // Efecto para manejar el debounce
-  useEffect(() => {
-    // Limpiar el timeout anterior
+useEffect(() => {
+  if (debounceRef.current) {
+    clearTimeout(debounceRef.current);
+  }
+
+  debounceRef.current = setTimeout(() => {
+    if (onSearch) {
+      setIsSearching(true);
+      onSearch(searchTerm).finally(() => {
+        setIsSearching(false);
+      });
+    }
+  }, 500);
+
+  return () => {
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
     }
+  };
+}, [searchTerm, onSearch]);
 
-    // No buscar si está vacío y es el valor inicial
-    if (searchTerm === initialValue && searchTerm === '') {
-      return;
-    }
-
-    // Configurar nuevo timeout
-    debounceRef.current = setTimeout(() => {
-      if (onSearch) {
-        setIsSearching(true);
-        onSearch(searchTerm).finally(() => {
-          setIsSearching(false);
-        });
-      }
-    }, 500); // 500ms para mejor UX
-
-    // Cleanup al desmontar
-    return () => {
-      if (debounceRef.current) {
-        clearTimeout(debounceRef.current);
-      }
-    };
-  }, [searchTerm, onSearch]); // Dependencias necesarias
 
   const handleSubmit = (e) => {
     e.preventDefault();
