@@ -1,12 +1,11 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { useState, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
-import SearchBar from '../components/SearchBar';
+import { useState, useCallback } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import SearchBar from "../components/SearchBar";
 
 export default function Home() {
-  const router = useRouter();
   const [searchResults, setSearchResults] = useState(null);
   const [isSearching, setIsSearching] = useState(false);
 
@@ -15,224 +14,200 @@ export default function Home() {
       setSearchResults(null);
       return;
     }
-
     setIsSearching(true);
     try {
-      // Buscar en todas las categorías disponibles
-      const response = await fetch(`/api/camisas?categorias=JUGADOR,JUGADOR2,RETRO,AFICIONADO 1,AFICIONADO 2&search=${encodeURIComponent(searchTerm)}&limit=20`);
-      if (response.ok) {
-        const data = await response.json();
-        setSearchResults(data);
-      }
-    } catch (error) {
-      console.error('Error en búsqueda:', error);
+      const res = await fetch(
+        `/api/camisas?categorias=JUGADOR,JUGADOR2,RETRO,AFICIONADO%201,AFICIONADO%202&search=${encodeURIComponent(
+          searchTerm
+        )}&limit=20`
+      );
+      if (res.ok) setSearchResults(await res.json());
+    } catch (e) {
+      console.error(e);
     } finally {
       setIsSearching(false);
     }
   }, []);
-  const categorias = [
-    {
-      id: 'jugador',
-      titulo: 'Camisas de Jugador',
-      descripcion: 'Camisas oficiales de calidad premium',
-      ruta: '/jugador',
-      color: 'blue',
-      categorias: ['JUGADOR', 'JUGADOR2'],
-      emoji: '⭐',
-      disponible: true
-    },
-    {
-      id: 'retro',
-      titulo: 'Camisas Retro',
-      descripcion: 'Camisas clásicas de temporadas pasadas',
-      ruta: '/retro',
-      color: 'purple',
-      categorias: ['RETRO'],
-      emoji: '🏆',
-      disponible: true
-    },
-    {
-      id: 'aficionado',
-      titulo: 'Camisas de Aficionado',
-      descripcion: 'Camisas para fanáticos y uso casual',
-      ruta: '/aficionado',
-      color: 'green',
-      categorias: ['AFICIONADO 1', 'AFICIONADO 2'],
-      emoji: '⚽',
-      disponible: true
-    }
-  ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl md:text-6xl">
-            <span className="block xl:inline">Catálogo de</span>{' '}
-            <span className="block text-indigo-600 xl:inline">Camisas</span>
-          </h1>
-          <p className="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-            Descubre nuestra colección de camisas de fútbol organizadas por categorías
-          </p>
+    <main className="flex min-h-screen flex-col items-center p-5">
+      {/* Header */}
+      <div className="text-center mb-8">
+        <h1 className="text-4xl font-bold mb-2">Retro Clásicas</h1>
+        <p className="text-lg font-light mb-4">
+          Camisas históricas y vintage de épocas doradas del fútbol
+        </p>
+      </div>
 
-          {/* Barra de búsqueda global */}
-          <div className="mt-8 max-w-xl mx-auto">
-            <SearchBar
-              onSearch={handleGlobalSearch}
-              placeholder="Buscar camisas en todo el catálogo..."
-              className="w-full"
-            />
-          </div>
-        </div>
+      {/* SearchBar SIEMPRE VISIBLE */}
+      <div className="w-full max-w-md mb-8">
+        <SearchBar
+          onSearch={handleGlobalSearch}
+          placeholder="Buscar camisas en todo el catálogo..."
+          className="w-full"
+        />
+      </div>
 
-        {/* Resultados de búsqueda */}
-        {searchResults && (
-          <div className="mb-12">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Resultados de búsqueda ({searchResults.pagination?.totalCamisas || 0} encontradas)
-              </h3>
-              {searchResults.camisas?.length > 0 ? (
-                <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                  {searchResults.camisas.slice(0, 8).map((camisa, index) => (
-                    <Link 
-                      key={index}
-                      href={`/camisa/${encodeURIComponent(camisa.subcategoria)}`}
-                      className="group block"
-                    >
-                      <div className="bg-gray-50 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
-                        <div className="aspect-square relative">
-                          <img
-                            src={camisa.imageUrl}
-                            alt={camisa.subcategoria}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
-                          <div className="absolute top-2 left-2">
-                            <span className={`text-xs px-2 py-1 rounded-full text-white ${
-                              camisa.categoria === 'RETRO' 
-                                ? 'bg-purple-600' 
-                                : 'bg-green-600'
-                            }`}>
-                              {camisa.categoria}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="p-3">
-                          <h4 className="font-medium text-sm text-gray-900 line-clamp-2">
-                            {camisa.subcategoria}
-                          </h4>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-gray-500 text-center py-8">
-                  No se encontraron camisas con ese término de búsqueda
-                </p>
-              )}
-              {searchResults.camisas?.length > 8 && (
-                <div className="mt-4 text-center">
-                  <p className="text-sm text-gray-500">
-                    Mostrando 8 de {searchResults.pagination.totalCamisas} resultados
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+      {/* Mientras busca */}
+      {isSearching && <p className="text-gray-500 mb-6">Buscando camisas…</p>}
 
-        {/* Cards Grid */}
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
-          {categorias.map((categoria) => (
-            <div key={categoria.id} className="relative">
-              {categoria.disponible ? (
-                <Link href={categoria.ruta} className="group block">
-                  <div className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-                    {/* Image placeholder */}
-                    <div className={`h-48 bg-gradient-to-r ${
-                      categoria.color === 'purple' 
-                        ? 'from-purple-500 to-pink-600' 
-                        : categoria.color === 'green'
-                        ? 'from-green-500 to-teal-600'
-                        : 'from-blue-500 to-blue-600'
-                    } flex items-center justify-center`}>
-                      <div className="text-white text-8xl">
-                        {categoria.emoji}
-                      </div>
+      {/* Si hay resultados, muestro sólo la grilla de resultados */}
+      {searchResults ? (
+        <div className="w-full max-w-7xl">
+          <h3 className="text-lg font-semibold text-gray-900 mb-8">
+            {searchResults.pagination?.totalCamisas || 0} resultados encontrados
+          </h3>
+          {searchResults.camisas.length > 0 ? (
+            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 m-7">
+              {searchResults.camisas.map((c, i) => (
+                <Link
+                  key={i}
+                  href={`/camisa/${encodeURIComponent(c.subcategoria)}`}
+                  className="group block"
+                >
+                  <div className="bg-gray-50 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                    <div className="aspect-square relative">
+                      <img
+                        src={c.imageUrl}
+                        alt={c.subcategoria}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <span
+                        className={`absolute top-2 left-2 text-xs px-2 py-1 rounded-full text-white ${
+                          c.categoria === "RETRO"
+                            ? "bg-purple-600"
+                            : "bg-green-600"
+                        }`}
+                      >
+                        {c.categoria}
+                      </span>
                     </div>
-                    
-                    {/* Content */}
-                    <div className="p-6">
-                      <h3 className={`text-xl font-semibold text-gray-900 mb-2 group-hover:text-${categoria.color}-600 transition-colors`}>
-                        {categoria.titulo}
-                      </h3>
-                      <p className="text-gray-600 mb-4">
-                        {categoria.descripcion}
-                      </p>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-500">
-                          Ver colección
-                        </span>
-                        <svg 
-                          className={`w-5 h-5 text-${categoria.color}-500 group-hover:translate-x-1 transition-transform`}
-                          fill="none" 
-                          stroke="currentColor" 
-                          viewBox="0 0 24 24"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                      </div>
+                    <div className="p-3">
+                      <h4 className="font-medium text-sm text-gray-900 line-clamp-2">
+                        {c.subcategoria}
+                      </h4>
                     </div>
                   </div>
                 </Link>
-              ) : (
-                <div className="group cursor-not-allowed">
-                  <div className="bg-white rounded-xl shadow-lg overflow-hidden opacity-75">
-                    {/* Image placeholder */}
-                    <div className="h-48 bg-gradient-to-r from-gray-400 to-gray-500 flex items-center justify-center">
-                      <div className="text-white text-8xl">
-                        {categoria.emoji}
-                      </div>
-                    </div>
-                    
-                    {/* Content */}
-                    <div className="p-6">
-                      <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                        {categoria.titulo}
-                      </h3>
-                      <p className="text-gray-600 mb-4">
-                        {categoria.descripcion}
-                      </p>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-yellow-600 bg-yellow-100 px-2 py-1 rounded">
-                          🔜 Próximamente
-                        </span>
-                        <svg 
-                          className="w-5 h-5 text-gray-400"
-                          fill="none" 
-                          stroke="currentColor" 
-                          viewBox="0 0 24 24"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
+              ))}
             </div>
-          ))}
+          ) : (
+            <p className="text-gray-500 text-center py-8">
+              No se encontraron camisas
+            </p>
+          )}
         </div>
+      ) : (
+        <>
+          <div className="flex md:flex-row flex-col justify-around w-auto md:w-full md:space-x-7 space-y-7 md:space-y-0 grow">
+            <button
+              className="flex flex-col w-full rounded-lg border cursor-pointer min-h-full max-h-80 md:max-h-full overflow-hidden"
+              onClick={() => (window.location.href = "/retro")}
+            >
+              <div className="group flex-1 flex justify-center items-center h-40 rounded-t-lg bg-red-500/70 hover:bg-red-500 transition-all duration-300">
+                <Image
+                  src="/images/shirt.svg"
+                  alt="Playera de Fútbol"
+                  width={100}
+                  height={100}
+                  className="opacity-70 group-hover:opacity-100 group-hover:scale-115 transition-transform duration-300 ease-out"
+                />
+              </div>
+              <h3 className="text-start text-sm font-bold p-4 h-20 flex items-center">
+                Camisas Retro
+              </h3>
+            </button>
 
-        {/* Footer */}
-        <div className="mt-16 text-center">
-          <p className="text-gray-500">
-            Todas las camisas son réplicas de alta calidad
-          </p>
-        </div>
-      </div>
-    </div>
+            <button
+              className="flex flex-col w-full rounded-lg border cursor-pointer min-h-full max-h-80 md:max-h-full overflow-hidden"
+              onClick={() => (window.location.href = "/jugador")}
+            >
+              <div className="group flex-1 flex justify-center items-center h-40 rounded-t-lg bg-yellow-500/70 hover:bg-yellow-500 transition-all duration-300">
+                <Image
+                  src="/images/shirt.svg"
+                  alt="Playera de Fútbol"
+                  width={100}
+                  height={100}
+                  className="opacity-70 group-hover:opacity-100 group-hover:scale-115 transition-transform duration-300 ease-out"
+                />
+              </div>
+              <h3 className="text-start text-sm font-bold p-7">
+                Camisas de Jugador
+              </h3>
+            </button>
+            <button
+              className="flex flex-col w-full rounded-lg border cursor-pointer min-h-full max-h-80 md:max-h-full overflow-hidden"
+              onClick={() => (window.location.href = "/aficionado")}
+            >
+              <div className="group flex-1 flex justify-center items-center h-40 rounded-t-lg bg-blue-900/70 hover:bg-blue-900 transition-all duration-300">
+                <Image
+                  src="/images/shirt.svg"
+                  alt="Playera de Fútbol"
+                  width={100}
+                  height={100}
+                  className="opacity-70 group-hover:opacity-100 group-hover:scale-115 transition-transform duration-300 ease-out"
+                />
+              </div>
+              <h3 className="text-start text-sm font-bold p-7">
+                Camisas de Aficionado
+              </h3>
+            </button>
+          </div>
+          <footer className="mt-8 text-center text-sm flex flex-row justify-around w-full">
+            <div className="flex items-center flex-col space-y-3">
+              <div className="w-15 h-15 bg-red-500/70 rounded-full flex justify-center items-center">
+                <Image
+                  src="/images/shirtorange.svg"
+                  alt="Playera de Fútbol"
+                  width={40}
+                  height={40}
+                  className="opacity-70 group-hover:opacity-100 group-hover:scale-115 transition-transform duration-300 ease-out"
+                />
+              </div>
+              <h3 className="text-center text-base font-extrabold">
+                Retro Auténticas
+              </h3>
+              <p className="text-center text-sm font-bold text-gray-900">
+                Camisas históricas con diseños originales y materiales vintage.
+              </p>
+            </div>
+            <div className="flex items-center flex-col space-y-3">
+              <div className="w-15 h-15 bg-yellow-500/70 rounded-full flex justify-center items-center">
+                <Image
+                  src="/images/star.svg"
+                  alt="Playera de Fútbol"
+                  width={40}
+                  height={40}
+                  className="opacity-70 group-hover:opacity-100 group-hover:scale-115 transition-transform duration-300 ease-out"
+                />
+              </div>
+              <h3 className="text-center text-base font-extrabold">
+                Calidad Jugador
+              </h3>
+              <p className="text-center text-sm font-bold text-gray-900">
+                Misma calidad que usan los profesionales en el campo.
+              </p>
+            </div>
+            <div className="flex items-center flex-col space-y-3">
+              <div className="w-15 h-15 bg-blue-900/70 rounded-full flex justify-center items-center">
+                <Image
+                  src="/images/heart.svg"
+                  alt="Playera de Fútbol"
+                  width={40}
+                  height={40}
+                  className="opacity-70 group-hover:opacity-100 group-hover:scale-115 transition-transform duration-300 ease-out"
+                />
+              </div>
+              <h3 className="text-center text-base font-extrabold">
+                Para aficionados
+              </h3>
+              <p className="text-center text-sm font-bold text-gray-900">
+                Diseños accesibles sin comprometer el estilo y la comodidad.
+              </p>
+            </div>
+          </footer>
+        </>
+      )}
+    </main>
   );
 }
