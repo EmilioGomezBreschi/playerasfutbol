@@ -186,6 +186,7 @@ export default function Home() {
                   src="/images/Retro.jpeg"
                   alt="Camisas Retro"
                   fill
+                  unoptimized
                   className="object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300 ease-out rounded-t-lg"
                   sizes="(max-width: 768px) 100vw, 33vw"
                 />
@@ -204,6 +205,7 @@ export default function Home() {
                   src="/images/Jugador.jpeg"
                   alt="Camisas de Jugador"
                   fill
+                  unoptimized
                   className="object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300 ease-out rounded-t-lg"
                   sizes="(max-width: 768px) 100vw, 33vw"
                 />
@@ -222,6 +224,7 @@ export default function Home() {
                   src="/images/Aficionado.jpeg"
                   alt="Camisas de Aficionado"
                   fill
+                  unoptimized
                   className="object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300 ease-out rounded-t-lg"
                   sizes="(max-width: 768px) 100vw, 33vw"
                 />
