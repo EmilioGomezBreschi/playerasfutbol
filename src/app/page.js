@@ -236,7 +236,7 @@ export default function Home() {
             >
               <div className="group flex-1 flex justify-center items-center h-48 md:h-40 rounded-t-lg transition-all duration-300 relative">
                 <OptimizedImage
-                  src="/images/Retro.jpeg"
+                  src="/images/retro.jpeg"
                   alt="Camisas Retro"
                   priority={true}
                   className="object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300 ease-out rounded-t-lg"
@@ -253,7 +253,7 @@ export default function Home() {
             >
               <div className="group flex-1 flex justify-center items-center h-48 md:h-40 rounded-t-lg transition-all duration-300 relative">
                 <OptimizedImage
-                  src="/images/Jugador.jpeg"
+                  src="/images/jugador.jpeg"
                   alt="Camisas de Jugador"
                   priority={true}
                   className="object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300 ease-out rounded-t-lg"
@@ -270,7 +270,7 @@ export default function Home() {
             >
               <div className="group flex-1 flex justify-center items-center h-48 md:h-40 rounded-t-lg transition-all duration-300 relative">
                 <OptimizedImage
-                  src="/images/Aficionado.jpeg"
+                  src="/images/aficionado.jpeg"
                   alt="Camisas de Aficionado"
                   priority={true}
                   className="object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300 ease-out rounded-t-lg"
