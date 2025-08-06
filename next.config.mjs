@@ -14,6 +14,11 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     formats: ['image/webp', 'image/avif'],
     minimumCacheTTL: 86400, // 24 horas de cache
+    // Configuración para móviles problemáticos
+    unoptimized: process.env.DISABLE_IMAGE_OPTIMIZATION === 'true',
+    // Configuración específica para móviles
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   
   // Optimización del compilador
