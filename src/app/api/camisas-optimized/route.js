@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import Camisa from '../../../models/Camisa.js';
-import '../../../lib/config.js';
+import Camisa from '../../../../models/Camisa.js';
+import '../../../../lib/config.js';
 
 export async function GET(request) {
   try {
