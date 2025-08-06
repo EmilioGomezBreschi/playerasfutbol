@@ -238,7 +238,7 @@ export default function Home() {
                 <img
                   src="/retro.jpeg"
                   alt="Camisas Retro"
-                  className="w-full h-full object-cover opacity-70 hover:opacity-100 transition-opacity duration-300 ease-out rounded-t-lg"
+                  className="w-full h-full object-cover md:opacity-70 md:hover:opacity-100 transition-opacity duration-300 ease-out rounded-t-lg"
                 />
               </div>
               <h3 className="text-start text-sm font-bold p-4 h-20 flex items-center">
@@ -254,7 +254,7 @@ export default function Home() {
                 <img
                   src="/jugador.jpeg"
                   alt="Camisas de Jugador"
-                  className="w-full h-full object-cover opacity-70 hover:opacity-100 transition-opacity duration-300 ease-out rounded-t-lg"
+                  className="w-full h-full object-cover md:opacity-70 md:hover:opacity-100 transition-opacity duration-300 ease-out rounded-t-lg"
                 />
               </div>
               <h3 className="text-start text-sm font-bold p-4 h-20 flex items-center">
@@ -270,7 +270,7 @@ export default function Home() {
                 <img
                   src="/aficionado.jpeg"
                   alt="Camisas de Aficionado"
-                  className="w-full h-full object-cover opacity-70 hover:opacity-100 transition-opacity duration-300 ease-out rounded-t-lg"
+                  className="w-full h-full object-cover md:opacity-70 md:hover:opacity-100 transition-opacity duration-300 ease-out rounded-t-lg"
                 />
               </div>
               <h3 className="text-start text-sm font-bold p-4 h-20 flex items-center">
