@@ -71,7 +71,25 @@ export default function Home() {
   }, [fetchPage, page, searchTerm]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-5 pb-10">
+    <main className="flex min-h-screen flex-col items-center p-5 pb-10 relative">
+      <div className="fixed top-4 right-4 z-50">
+        <a
+          href="https://instagram.com/retrojerseys_gdl"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center w-12 h-12 md:w-14 md:h-14 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 group"
+          aria-label="Síguenos en Instagram"
+        >
+          <Image
+            src="/ig.svg"
+            alt="Instagram"
+            width={24}
+            height={24}
+            className="w-6 h-6 md:w-7 md:h-7 filter brightness-0 invert group-hover:scale-110 transition-transform duration-300"
+          />
+        </a>
+      </div>
+
       {/* Header */}
       <div className="text-center mb-2">
         <h1 className="text-4xl font-bold mb-2">Retro Clásicas</h1>
