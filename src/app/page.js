@@ -181,16 +181,13 @@ export default function Home() {
               className="flex flex-col w-full rounded-lg border cursor-pointer min-h-80 overflow-hidden"
               onClick={() => (window.location.href = "/retro")}
             >
-              <div className="group flex-1 flex justify-center items-center h-40 rounded-t-lg transition-all duration-300">
-                <div
-                  className="
-                    w-full h-full
-                    bg-center bg-cover
-                    opacity-70
-                    group-hover:opacity-100
-                    transition-opacity duration-300 ease-out
-                  "
-                  style={{ backgroundImage: `url(/images/Retro.jpeg)` }}
+              <div className="group flex-1 flex justify-center items-center h-48 md:h-40 rounded-t-lg transition-all duration-300 relative">
+                <Image
+                  src="/images/Retro.jpeg"
+                  alt="Camisas Retro"
+                  fill
+                  className="object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300 ease-out rounded-t-lg"
+                  sizes="(max-width: 768px) 100vw, 33vw"
                 />
               </div>
               <h3 className="text-start text-sm font-bold p-4 h-20 flex items-center">
@@ -202,19 +199,16 @@ export default function Home() {
               className="flex flex-col w-full rounded-lg border cursor-pointer min-h-80 overflow-hidden"
               onClick={() => (window.location.href = "/jugador")}
             >
-              <div className="group flex-1 flex justify-center items-center h-40 rounded-t-lg transition-all duration-300">
-                <div
-                  className="
-                    w-full h-full
-                    bg-center bg-cover
-                    opacity-70
-                    group-hover:opacity-100
-                    transition-opacity duration-300 ease-out
-                  "
-                  style={{ backgroundImage: `url(/images/Jugador.jpeg)` }}
+              <div className="group flex-1 flex justify-center items-center h-48 md:h-40 rounded-t-lg transition-all duration-300 relative">
+                <Image
+                  src="/images/Jugador.jpeg"
+                  alt="Camisas de Jugador"
+                  fill
+                  className="object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300 ease-out rounded-t-lg"
+                  sizes="(max-width: 768px) 100vw, 33vw"
                 />
               </div>
-              <h3 className="text-start text-sm font-bold p-7">
+              <h3 className="text-start text-sm font-bold p-4 h-20 flex items-center">
                 Camisas de Jugador
               </h3>
             </button>
@@ -223,74 +217,71 @@ export default function Home() {
               className="flex flex-col w-full rounded-lg border cursor-pointer min-h-80 overflow-hidden"
               onClick={() => (window.location.href = "/aficionado")}
             >
-              <div className="group flex-1 flex justify-center items-center h-40 rounded-t-lg transition-all duration-300">
-                <div
-                  className="
-                    w-full h-full
-                    bg-center bg-cover
-                    opacity-70
-                    group-hover:opacity-100
-                    transition-opacity duration-300 ease-out
-                  "
-                  style={{ backgroundImage: `url(/images/Aficionado.jpeg)` }}
+              <div className="group flex-1 flex justify-center items-center h-48 md:h-40 rounded-t-lg transition-all duration-300 relative">
+                <Image
+                  src="/images/Aficionado.jpeg"
+                  alt="Camisas de Aficionado"
+                  fill
+                  className="object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300 ease-out rounded-t-lg"
+                  sizes="(max-width: 768px) 100vw, 33vw"
                 />
               </div>
-              <h3 className="text-start text-sm font-bold p-7">
+              <h3 className="text-start text-sm font-bold p-4 h-20 flex items-center">
                 Camisas de Aficionado
               </h3>
             </button>
           </div>
 
           {/* Footer */}
-          <footer className="mt-8 text-center text-sm flex flex-row justify-around w-full">
+          <footer className="mt-8 text-center text-sm flex flex-col md:flex-row justify-around w-full space-y-6 md:space-y-0">
             <div className="flex items-center flex-col space-y-3">
-              <div className="w-15 h-15 bg-purple-700/70 rounded-full flex justify-center items-center">
+              <div className="w-16 h-16 bg-purple-700/70 rounded-full flex justify-center items-center">
                 <Image
                   src="/images/shirtorange.svg"
                   alt="Retro Auténticas"
                   width={40}
                   height={40}
-                  className="opacity-70 group-hover:opacity-100 group-hover:scale-115 transition-transform duration-300 ease-out"
+                  className="opacity-70 hover:opacity-100 hover:scale-110 transition-transform duration-300 ease-out"
                 />
               </div>
               <h3 className="text-center text-base font-extrabold">
                 Retro Auténticas
               </h3>
-              <p className="text-center text-sm font-bold text-gray-900">
+              <p className="text-center text-sm font-bold text-gray-900 px-2">
                 Camisas históricas con diseños originales y materiales vintage.
               </p>
             </div>
             <div className="flex items-center flex-col space-y-3">
-              <div className="w-15 h-15 bg-blue-900/70 rounded-full flex justify-center items-center">
+              <div className="w-16 h-16 bg-blue-900/70 rounded-full flex justify-center items-center">
                 <Image
                   src="/images/star.svg"
                   alt="Calidad Jugador"
                   width={40}
                   height={40}
-                  className="opacity-70 group-hover:opacity-100 group-hover:scale-115 transition-transform duration-300 ease-out"
+                  className="opacity-70 hover:opacity-100 hover:scale-110 transition-transform duration-300 ease-out"
                 />
               </div>
               <h3 className="text-center text-base font-extrabold">
                 Calidad Jugador
               </h3>
-              <p className="text-center text-sm font-bold text-gray-900">
+              <p className="text-center text-sm font-bold text-gray-900 px-2">
                 Misma calidad que usan los profesionales en el campo.
               </p>
             </div>
             <div className="flex items-center flex-col space-y-3">
-              <div className="w-15 h-15 bg-green-500/70 rounded-full flex justify-center items-center">
+              <div className="w-16 h-16 bg-green-500/70 rounded-full flex justify-center items-center">
                 <Image
                   src="/images/heart.svg"
                   alt="Para aficionados"
                   width={40}
                   height={40}
-                  className="opacity-70 group-hover:opacity-100 group-hover:scale-115 transition-transform duration-300 ease-out"
+                  className="opacity-70 hover:opacity-100 hover:scale-110 transition-transform duration-300 ease-out"
                 />
               </div>
               <h3 className="text-center text-base font-extrabold">
                 Para aficionados
               </h3>
-              <p className="text-center text-sm font-bold text-gray-900">
+              <p className="text-center text-sm font-bold text-gray-900 px-2">
                 Diseños accesibles sin comprometer el estilo y la comodidad.
               </p>
             </div>
