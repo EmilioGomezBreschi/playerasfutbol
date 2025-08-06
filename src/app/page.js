@@ -5,6 +5,59 @@ import Link from "next/link";
 import Image from "next/image";
 import SearchBar from "../components/SearchBar";
 
+// Componente de imagen optimizada con fallback
+const OptimizedImage = ({ src, alt, className, priority = false }) => {
+  const [imageError, setImageError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleError = () => {
+    setImageError(true);
+    setIsLoading(false);
+  };
+
+  const handleLoad = () => {
+    setIsLoading(false);
+  };
+
+  if (imageError) {
+    // Fallback para móviles problemáticos
+    return (
+      <img
+        src={src}
+        alt={alt}
+        className={className}
+        style={{
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+        }}
+        loading={priority ? "eager" : "lazy"}
+      />
+    );
+  }
+
+  return (
+    <>
+      {isLoading && (
+        <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-t-lg" />
+      )}
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        priority={priority}
+        className={className}
+        sizes="(max-width: 768px) 100vw, 33vw"
+        style={{
+          objectFit: "cover",
+        }}
+        onError={handleError}
+        onLoad={handleLoad}
+      />
+    </>
+  );
+};
+
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState(null);
@@ -182,13 +235,11 @@ export default function Home() {
               onClick={() => (window.location.href = "/retro")}
             >
               <div className="group flex-1 flex justify-center items-center h-48 md:h-40 rounded-t-lg transition-all duration-300 relative">
-                <Image
+                <OptimizedImage
                   src="/images/Retro.jpeg"
                   alt="Camisas Retro"
-                  fill
-                  unoptimized
+                  priority={true}
                   className="object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300 ease-out rounded-t-lg"
-                  sizes="(max-width: 768px) 100vw, 33vw"
                 />
               </div>
               <h3 className="text-start text-sm font-bold p-4 h-20 flex items-center">
@@ -201,13 +252,11 @@ export default function Home() {
               onClick={() => (window.location.href = "/jugador")}
             >
               <div className="group flex-1 flex justify-center items-center h-48 md:h-40 rounded-t-lg transition-all duration-300 relative">
-                <Image
+                <OptimizedImage
                   src="/images/Jugador.jpeg"
                   alt="Camisas de Jugador"
-                  fill
-                  unoptimized
+                  priority={true}
                   className="object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300 ease-out rounded-t-lg"
-                  sizes="(max-width: 768px) 100vw, 33vw"
                 />
               </div>
               <h3 className="text-start text-sm font-bold p-4 h-20 flex items-center">
@@ -220,13 +269,11 @@ export default function Home() {
               onClick={() => (window.location.href = "/aficionado")}
             >
               <div className="group flex-1 flex justify-center items-center h-48 md:h-40 rounded-t-lg transition-all duration-300 relative">
-                <Image
+                <OptimizedImage
                   src="/images/Aficionado.jpeg"
                   alt="Camisas de Aficionado"
-                  fill
-                  unoptimized
+                  priority={true}
                   className="object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300 ease-out rounded-t-lg"
-                  sizes="(max-width: 768px) 100vw, 33vw"
                 />
               </div>
               <h3 className="text-start text-sm font-bold p-4 h-20 flex items-center">
