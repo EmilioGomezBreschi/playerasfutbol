@@ -56,8 +56,8 @@ export default function Pagination({
         disabled={currentPage === 1}
         className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
           currentPage === 1
-            ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-            : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+            ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+            : "bg-white text-gray-700 cursor-pointer border border-gray-300 hover:bg-gray-200 hover:text-indigo-600"
         }`}
       >
         ← Anterior
@@ -68,7 +68,7 @@ export default function Pagination({
         <>
           <button
             onClick={() => onPageChange(1)}
-            className="px-3 py-2 rounded-md text-sm font-medium bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
+            className="px-3 py-2 rounded-md text-sm font-medium bg-white text-gray-700 border hover:bg-gray-50"
           >
             1
           </button>
@@ -85,8 +85,8 @@ export default function Pagination({
           onClick={() => onPageChange(page)}
           className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
             page === currentPage
-              ? 'bg-indigo-600 text-white'
-              : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+              ? "bg-indigo-600 text-white"
+              : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-200 hover:text-indigo-600 cursor-pointer"
           }`}
         >
           {page}
@@ -101,7 +101,7 @@ export default function Pagination({
           )}
           <button
             onClick={() => onPageChange(totalPages)}
-            className="px-3 py-2 rounded-md text-sm font-medium bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
+            className="px-3 py-2 rounded-md text-sm font-medium bg-white text-gray-700 border border-gray-300 hover:text-indigo-600 hover:bg-gray-200 cursor-pointer"
           >
             {totalPages}
           </button>
@@ -114,8 +114,8 @@ export default function Pagination({
         disabled={currentPage === totalPages}
         className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
           currentPage === totalPages
-            ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-            : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+            ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+            : "bg-white text-gray-700 cursor-pointer border border-gray-300 hover:bg-gray-200 hover:text-indigo-600"
         }`}
       >
         Siguiente →
