@@ -234,12 +234,11 @@ export default function Home() {
               className="flex flex-col w-full rounded-lg border cursor-pointer min-h-80 overflow-hidden"
               onClick={() => (window.location.href = "/retro")}
             >
-              <div className="group flex-1 flex justify-center items-center h-48 md:h-40 rounded-t-lg transition-all duration-300 relative">
-                <OptimizedImage
+              <div className="flex grow w-full h-48 rounded-t-lg">
+                <img
                   src="/retro.jpeg"
                   alt="Camisas Retro"
-                  priority={true}
-                  className="object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300 ease-out rounded-t-lg"
+                  className="w-full h-full object-cover opacity-70 hover:opacity-100 transition-opacity duration-300 ease-out rounded-t-lg"
                 />
               </div>
               <h3 className="text-start text-sm font-bold p-4 h-20 flex items-center">
@@ -251,12 +250,11 @@ export default function Home() {
               className="flex flex-col w-full rounded-lg border cursor-pointer min-h-80 overflow-hidden"
               onClick={() => (window.location.href = "/jugador")}
             >
-              <div className="group flex-1 flex justify-center items-center h-48 md:h-40 rounded-t-lg transition-all duration-300 relative">
-                <OptimizedImage
+              <div className="flex grow w-full h-48 rounded-t-lg">
+                <img
                   src="/jugador.jpeg"
                   alt="Camisas de Jugador"
-                  priority={true}
-                  className="object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300 ease-out rounded-t-lg"
+                  className="w-full h-full object-cover opacity-70 hover:opacity-100 transition-opacity duration-300 ease-out rounded-t-lg"
                 />
               </div>
               <h3 className="text-start text-sm font-bold p-4 h-20 flex items-center">
@@ -268,12 +266,11 @@ export default function Home() {
               className="flex flex-col w-full rounded-lg border cursor-pointer min-h-80 overflow-hidden"
               onClick={() => (window.location.href = "/aficionado")}
             >
-              <div className="group flex-1 flex justify-center items-center h-48 md:h-40 rounded-t-lg transition-all duration-300 relative">
-                <OptimizedImage
+              <div className="flex grow w-full h-48 rounded-t-lg">
+                <img
                   src="/aficionado.jpeg"
                   alt="Camisas de Aficionado"
-                  priority={true}
-                  className="object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300 ease-out rounded-t-lg"
+                  className="w-full h-full object-cover opacity-70 hover:opacity-100 transition-opacity duration-300 ease-out rounded-t-lg"
                 />
               </div>
               <h3 className="text-start text-sm font-bold p-4 h-20 flex items-center">
