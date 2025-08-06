@@ -9,6 +9,15 @@ export default function SearchBar({
   const [searchTerm, setSearchTerm] = useState(initialValue);
   const [isSearching, setIsSearching] = useState(false);
   const debounceRef = useRef(null);
+  const lastSearchTermRef = useRef(initialValue);
+
+  // Sincronizar con cambios externos del valor inicial
+  useEffect(() => {
+    if (initialValue !== lastSearchTermRef.current) {
+      setSearchTerm(initialValue);
+      lastSearchTermRef.current = initialValue;
+    }
+  }, [initialValue]);
 
   const handleSearch = async (value) => {
     setIsSearching(true);
@@ -20,26 +29,30 @@ export default function SearchBar({
   };
 
   // Efecto para manejar el debounce
-useEffect(() => {
-  if (debounceRef.current) {
-    clearTimeout(debounceRef.current);
-  }
-
-  debounceRef.current = setTimeout(() => {
-    if (onSearch) {
-      setIsSearching(true);
-      onSearch(searchTerm).finally(() => {
-        setIsSearching(false);
-      });
-    }
-  }, 500);
-
-  return () => {
+  useEffect(() => {
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
     }
-  };
-}, [searchTerm, onSearch]);
+
+    // Solo ejecutar búsqueda automática si el término realmente cambió
+    if (searchTerm !== lastSearchTermRef.current) {
+      debounceRef.current = setTimeout(() => {
+        if (onSearch) {
+          setIsSearching(true);
+          onSearch(searchTerm).finally(() => {
+            setIsSearching(false);
+          });
+        }
+        lastSearchTermRef.current = searchTerm;
+      }, 500);
+    }
+
+    return () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+    };
+  }, [searchTerm, onSearch]);
 
 
   const handleSubmit = (e) => {
@@ -48,11 +61,13 @@ useEffect(() => {
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
     }
+    lastSearchTermRef.current = searchTerm;
     handleSearch(searchTerm);
   };
 
   const handleClear = () => {
     setSearchTerm('');
+    lastSearchTermRef.current = '';
     // La búsqueda se ejecutará automáticamente por el useEffect
   };
 
