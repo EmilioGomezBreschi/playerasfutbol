@@ -181,13 +181,16 @@ export default function Home() {
               className="flex flex-col w-full rounded-lg border cursor-pointer min-h-80 overflow-hidden"
               onClick={() => (window.location.href = "/retro")}
             >
-              <div className="group flex-1 flex justify-center items-center h-40 rounded-t-lg bg-purple-700/70 hover:bg-purple-700 transition-all duration-300">
-                <Image
-                  src="/images/shirt.svg"
-                  alt="Camisas Retro"
-                  width={100}
-                  height={100}
-                  className="opacity-70 group-hover:opacity-100 group-hover:scale-115 transition-transform duration-300 ease-out"
+              <div className="group flex-1 flex justify-center items-center h-40 rounded-t-lg transition-all duration-300">
+                <div
+                  className="
+                    w-full h-full
+                    bg-center bg-cover
+                    opacity-70
+                    group-hover:opacity-100
+                    transition-opacity duration-300 ease-out
+                  "
+                  style={{ backgroundImage: `url(/images/Retro.jpeg)` }}
                 />
               </div>
               <h3 className="text-start text-sm font-bold p-4 h-20 flex items-center">
@@ -199,13 +202,16 @@ export default function Home() {
               className="flex flex-col w-full rounded-lg border cursor-pointer min-h-80 overflow-hidden"
               onClick={() => (window.location.href = "/jugador")}
             >
-              <div className="group flex-1 flex justify-center items-center h-40 rounded-t-lg bg-blue-900/70 hover:bg-blue-900 transition-all duration-300">
-                <Image
-                  src="/images/shirt.svg"
-                  alt="Camisas de Jugador"
-                  width={100}
-                  height={100}
-                  className="opacity-70 group-hover:opacity-100 group-hover:scale-115 transition-transform duration-300 ease-out"
+              <div className="group flex-1 flex justify-center items-center h-40 rounded-t-lg transition-all duration-300">
+                <div
+                  className="
+                    w-full h-full
+                    bg-center bg-cover
+                    opacity-70
+                    group-hover:opacity-100
+                    transition-opacity duration-300 ease-out
+                  "
+                  style={{ backgroundImage: `url(/images/Jugador.jpeg)` }}
                 />
               </div>
               <h3 className="text-start text-sm font-bold p-7">
@@ -217,13 +223,16 @@ export default function Home() {
               className="flex flex-col w-full rounded-lg border cursor-pointer min-h-80 overflow-hidden"
               onClick={() => (window.location.href = "/aficionado")}
             >
-              <div className="group flex-1 flex justify-center items-center h-40 rounded-t-lg bg-green-500/70 hover:bg-green-500 transition-all duration-300">
-                <Image
-                  src="/images/shirt.svg"
-                  alt="Camisas de Aficionado"
-                  width={100}
-                  height={100}
-                  className="opacity-70 group-hover:opacity-100 group-hover:scale-115 transition-transform duration-300 ease-out"
+              <div className="group flex-1 flex justify-center items-center h-40 rounded-t-lg transition-all duration-300">
+                <div
+                  className="
+                    w-full h-full
+                    bg-center bg-cover
+                    opacity-70
+                    group-hover:opacity-100
+                    transition-opacity duration-300 ease-out
+                  "
+                  style={{ backgroundImage: `url(/images/Aficionado.jpeg)` }}
                 />
               </div>
               <h3 className="text-start text-sm font-bold p-7">
