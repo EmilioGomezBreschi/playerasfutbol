@@ -26,8 +26,6 @@ const nextConfig = {
 
   // Optimización experimental (solo las válidas)
   experimental: {
-    // Optimizar CSS
-    optimizeCss: true,
     // Optimizar bundle
     optimizePackageImports: ['mongoose', 'cloudinary'],
   },
