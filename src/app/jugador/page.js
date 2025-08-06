@@ -369,7 +369,7 @@ export default function CamisasJugador() {
   if (error) return <ErrorComponent />;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white text-gray-900">
       {/* Header optimizado */}
       <div className="border-b border-gray-200 sticky top-0 z-40 backdrop-blur-sm bg-white/95">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -422,10 +422,10 @@ export default function CamisasJugador() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
             {/* Barra de búsqueda */}
-            <div className="flex-1 max-w-md">
+            <div className="flex-1 max-w-md border border-gray-900 rounded-md shadow-sm">
               <SearchBar
                 onSearch={handleSearch}
-                placeholder="Buscar camisas de jugador..."
+                placeholder="Buscar camisas retro..."
                 className="w-full"
                 initialValue={searchTerm}
               />

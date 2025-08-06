@@ -71,7 +71,7 @@ export default function Home() {
   }, [fetchPage, page, searchTerm]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-5 pb-10 relative">
+    <main className="flex min-h-screen flex-col items-center p-5 pb-10 relative bg-white text-gray-900">
       <div className="fixed top-4 right-4 z-50">
         <a
           href="https://instagram.com/retrojerseys_gdl"
