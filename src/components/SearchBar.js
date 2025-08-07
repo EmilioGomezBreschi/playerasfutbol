@@ -78,8 +78,8 @@ export default function SearchBar({
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder={placeholder}
             className="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg
-                       placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500
-                       transition-all"
+                      placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500
+                      transition-all"
           />
 
           {/* Botón de limpiar */}
