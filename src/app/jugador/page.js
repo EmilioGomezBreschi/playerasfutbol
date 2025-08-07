@@ -52,7 +52,7 @@ const CamisaCard = ({ camisa, index }) => {
       ref={cardRef}
       href={`/camisa/${encodeURIComponent(camisa.subcategoria)}`}
       className="group block"
-      prefetch={false} // Lazy loading de rutas
+      prefetch={false}
     >
       <div className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-xl hover:border-gray-300 transition-all duration-300 transform hover:-translate-y-1">
         {/* Imagen */}
@@ -154,7 +154,7 @@ function CamisasJugadorContent() {
 
   const [searchTerm, setSearchTerm] = useState(() => {
     const urlSearch = searchParams.get("search");
-    return urlSearch || getPreference("lastSearch", "");
+    return urlSearch || "";
   });
 
   const [viewMode, setViewMode] = useState(() =>
@@ -223,9 +223,6 @@ function CamisasJugadorContent() {
 
         // Guardar preferencias
         setPreference("lastPage", page);
-        if (search) {
-          setPreference("lastSearch", search);
-        }
       } catch (err) {
         if (err.name !== "AbortError") {
           setError(err.message);
@@ -289,7 +286,7 @@ function CamisasJugadorContent() {
         abortControllerRef.current.abort();
       }
     };
-  }, []); // Solo en mount
+  }, []);
 
   // Efecto para manejar cambios en itemsPerPage
   useEffect(() => {

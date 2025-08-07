@@ -154,7 +154,7 @@ function CamisasRetroContent() {
 
   const [searchTerm, setSearchTerm] = useState(() => {
     const urlSearch = searchParams.get("search");
-    return urlSearch || getPreference("lastSearch", "");
+    return urlSearch || "";
   });
 
   const [viewMode, setViewMode] = useState(() =>
@@ -223,9 +223,6 @@ function CamisasRetroContent() {
 
         // Guardar preferencias
         setPreference("lastPage", page);
-        if (search) {
-          setPreference("lastSearch", search);
-        }
       } catch (err) {
         if (err.name !== "AbortError") {
           setError(err.message);
