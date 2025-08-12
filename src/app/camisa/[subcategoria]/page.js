@@ -41,6 +41,9 @@ export default function DetalleCamisa() {
       case 'AFICIONADO 1':
       case 'AFICIONADO 2':
         return 'green';
+      case 'JUGADOR':
+      case 'JUGADOR2':
+        return 'blue';
       default:
         return 'gray';
     }
@@ -53,6 +56,9 @@ export default function DetalleCamisa() {
       case 'AFICIONADO 1':
       case 'AFICIONADO 2':
         return '/aficionado';
+      case 'JUGADOR':
+      case 'JUGADOR2':
+        return '/jugador';
       default:
         return '/';
     }
@@ -125,7 +131,9 @@ export default function DetalleCamisa() {
               href={rutaCategoria}
               className={`hover:text-${colorClasses}-600`}
             >
-              {data.categoria === "RETRO" ? "Retro" : "Aficionado"}
+              {data.categoria === "RETRO" ? "Retro" : 
+               (data.categoria === "JUGADOR" || data.categoria === "JUGADOR2") ? "Jugador" : 
+               "Aficionado"}
             </Link>
             <span>/</span>
             <span className="text-gray-900 font-medium">

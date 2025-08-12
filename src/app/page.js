@@ -232,7 +232,7 @@ export default function Home() {
           <div className="flex md:flex-row flex-col justify-around w-auto md:w-full md:space-x-7 space-y-7 md:space-y-0 grow">
             <button
               className="flex flex-col w-full rounded-lg border cursor-pointer min-h-80 overflow-hidden"
-              onClick={() => (window.location.href = "/retro")}
+              onClick={() => (window.location.href = "/retro?page=1")}
             >
               <div className="flex grow w-full h-48 rounded-t-lg">
                 <img
@@ -248,7 +248,7 @@ export default function Home() {
 
             <button
               className="flex flex-col w-full rounded-lg border cursor-pointer min-h-80 overflow-hidden"
-              onClick={() => (window.location.href = "/jugador")}
+              onClick={() => (window.location.href = "/jugador?page=1")}
             >
               <div className="flex grow w-full h-48 rounded-t-lg">
                 <img
@@ -264,7 +264,7 @@ export default function Home() {
 
             <button
               className="flex flex-col w-full rounded-lg border cursor-pointer min-h-80 overflow-hidden"
-              onClick={() => (window.location.href = "/aficionado")}
+              onClick={() => (window.location.href = "/aficionado?page=1")}
             >
               <div className="flex grow w-full h-48 rounded-t-lg">
                 <img

@@ -148,14 +148,49 @@ function CamisasJugadorContent() {
 
   // Estados de búsqueda y paginación con preferencias guardadas
   const [currentPage, setCurrentPage] = useState(() => {
+    console.log('🚀 JUGADOR - useState initialization ejecutándose...');
     const urlPage = searchParams.get("page");
-    return urlPage ? parseInt(urlPage) : getPreference("lastPage", 1);
+    if (urlPage) {
+      console.log('📍 JUGADOR - Inicializando desde URL page:', urlPage);
+      return parseInt(urlPage);
+    }
+    
+    // Verificar localStorage con timestamp para navegación activa
+    if (typeof window !== 'undefined') {
+      try {
+        const savedData = localStorage.getItem('jugador_navigation');
+        if (savedData) {
+          const { page, timestamp } = JSON.parse(savedData);
+          const now = Date.now();
+          const fiveMinutes = 5 * 60 * 1000; // 5 minutos
+          
+          if (now - timestamp < fiveMinutes) {
+            console.log('📍 JUGADOR - Inicializando desde localStorage:', page);
+            return parseInt(page);
+          } else {
+            // Limpiar datos antiguos
+            localStorage.removeItem('jugador_navigation');
+          }
+        }
+      } catch (e) {
+        console.error('Error leyendo localStorage:', e);
+        localStorage.removeItem('jugador_navigation');
+      }
+    }
+    
+    const cookiePage = getPreference("lastPage", 1);
+    console.log('📍 JUGADOR - Inicializando desde cookies/default:', cookiePage);
+    return cookiePage;
   });
 
   const [searchTerm, setSearchTerm] = useState(() => {
     const urlSearch = searchParams.get("search");
     return urlSearch || "";
   });
+
+  // Bandera para detectar primera carga y evitar resetear página al restaurar
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const hasInitialized = useRef(false);
 
   const [viewMode, setViewMode] = useState(() =>
     getPreference("viewMode", "grid")
@@ -221,8 +256,7 @@ function CamisasJugadorContent() {
         setCamisas(data.camisas);
         setPagination(data.pagination);
 
-        // Guardar preferencias
-        setPreference("lastPage", page);
+        // No guardar página en cookies para permitir que sessionStorage funcione
       } catch (err) {
         if (err.name !== "AbortError") {
           setError(err.message);
@@ -239,9 +273,22 @@ function CamisasJugadorContent() {
   // Función de búsqueda optimizada con debouncing
   const handleSearch = useCallback(
     async (search) => {
+      console.log('🔍 JUGADOR - handleSearch ejecutándose con:', search);
       const trimmedSearch = search.trim();
+      
+      // Si no ha cambiado el término de búsqueda, no hacer nada
+      if (trimmedSearch === searchTerm) {
+        console.log('🚫 JUGADOR - handleSearch ignorado, mismo término:', trimmedSearch);
+        return;
+      }
+      
       setSearchTerm(trimmedSearch);
-      setCurrentPage(1);
+      
+      // Solo resetear página si no es la primera carga (para permitir restauración)
+      if (!isFirstLoad) {
+        console.log('📄 JUGADOR - handleSearch reseteando página por búsqueda:', trimmedSearch);
+        setCurrentPage(1);
+      }
 
       // Actualizar URL sin recargar
       const newUrl = new URL(window.location);
@@ -256,7 +303,7 @@ function CamisasJugadorContent() {
 
       await fetchCamisas(1, trimmedSearch);
     },
-    [fetchCamisas]
+    [fetchCamisas, isFirstLoad, searchTerm]
   );
 
   // Función optimizada de cambio de página
@@ -277,9 +324,28 @@ function CamisasJugadorContent() {
     [fetchCamisas, searchTerm]
   );
 
+  // Guardar página actual en localStorage con timestamp para navegación
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      console.log('🔄 JUGADOR - Guardando en localStorage jugador_navigation:', currentPage);
+      const navigationData = {
+        page: currentPage,
+        timestamp: Date.now()
+      };
+      localStorage.setItem('jugador_navigation', JSON.stringify(navigationData));
+    }
+  }, [currentPage]);
+
   // Efecto inicial con cleanup
   useEffect(() => {
     fetchCamisas(currentPage, searchTerm);
+    
+    // Marcar que ya hemos inicializado después de la primera carga
+    setTimeout(() => {
+      hasInitialized.current = true;
+      setIsFirstLoad(false);
+      console.log('✅ JUGADOR - Inicialización completada');
+    }, 100);
 
     return () => {
       if (abortControllerRef.current) {
@@ -291,6 +357,14 @@ function CamisasJugadorContent() {
   // Efecto para manejar cambios en itemsPerPage
   useEffect(() => {
     setPreference("itemsPerPage", itemsPerPage);
+    
+    // Si no hemos inicializado completamente, no resetear
+    if (!hasInitialized.current) {
+      console.log('🚫 JUGADOR - Saltando reset de página, aún inicializando');
+      return;
+    }
+    
+    console.log('✅ JUGADOR - Ejecutando reset de página por cambio de itemsPerPage');
     if (currentPage === 1) {
       fetchCamisas(1, searchTerm, false); // No usar cache al cambiar items per page
     } else {

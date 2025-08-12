@@ -149,13 +149,47 @@ function CamisasRetroContent() {
   // Estados de búsqueda y paginación con preferencias guardadas
   const [currentPage, setCurrentPage] = useState(() => {
     const urlPage = searchParams.get("page");
-    return urlPage ? parseInt(urlPage) : getPreference("lastPage", 1);
+    if (urlPage) {
+      console.log('📍 RETRO - Inicializando desde URL page:', urlPage);
+      return parseInt(urlPage);
+    }
+    
+    // Verificar localStorage con timestamp para navegación activa
+    if (typeof window !== 'undefined') {
+      try {
+        const savedData = localStorage.getItem('retro_navigation');
+        if (savedData) {
+          const { page, timestamp } = JSON.parse(savedData);
+          const now = Date.now();
+          const fiveMinutes = 5 * 60 * 1000; // 5 minutos
+          
+          if (now - timestamp < fiveMinutes) {
+            console.log('📍 RETRO - Inicializando desde localStorage:', page);
+            return parseInt(page);
+          } else {
+            // Limpiar datos antiguos
+            localStorage.removeItem('retro_navigation');
+          }
+        }
+      } catch (e) {
+        console.error('Error leyendo localStorage:', e);
+        localStorage.removeItem('retro_navigation');
+      }
+    }
+    
+    const cookiePage = getPreference("lastPage", 1);
+    console.log('📍 RETRO - Inicializando desde cookies/default:', cookiePage);
+    return cookiePage;
   });
 
   const [searchTerm, setSearchTerm] = useState(() => {
     const urlSearch = searchParams.get("search");
     return urlSearch || "";
   });
+
+  // Bandera para detectar primera carga y evitar resetear página al restaurar
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const hasInitialized = useRef(false);
 
   const [viewMode, setViewMode] = useState(() =>
     getPreference("viewMode", "grid")
@@ -221,8 +255,7 @@ function CamisasRetroContent() {
         setCamisas(data.camisas);
         setPagination(data.pagination);
 
-        // Guardar preferencias
-        setPreference("lastPage", page);
+        // No guardar página en cookies para permitir que sessionStorage funcione
       } catch (err) {
         if (err.name !== "AbortError") {
           setError(err.message);
@@ -239,9 +272,22 @@ function CamisasRetroContent() {
   // Función de búsqueda optimizada con debouncing
   const handleSearch = useCallback(
     async (search) => {
+      console.log('🔍 RETRO - handleSearch ejecutándose con:', search);
       const trimmedSearch = search.trim();
+      
+      // Si no ha cambiado el término de búsqueda, no hacer nada
+      if (trimmedSearch === searchTerm) {
+        console.log('🚫 RETRO - handleSearch ignorado, mismo término:', trimmedSearch);
+        return;
+      }
+      
       setSearchTerm(trimmedSearch);
-      setCurrentPage(1);
+      
+      // Solo resetear página si no es la primera carga (para permitir restauración)
+      if (!isFirstLoad) {
+        console.log('📄 RETRO - handleSearch reseteando página por búsqueda:', trimmedSearch);
+        setCurrentPage(1);
+      }
 
       // Actualizar URL sin recargar
       const newUrl = new URL(window.location);
@@ -257,7 +303,7 @@ function CamisasRetroContent() {
       await fetchCamisas(1, trimmedSearch);
       searchCache.clear(); // Limpiar cache al buscar
     },
-    [fetchCamisas]
+    [fetchCamisas, isFirstLoad, searchTerm]
   );
 
   // Función optimizada de cambio de página
@@ -278,9 +324,28 @@ function CamisasRetroContent() {
     [fetchCamisas, searchTerm]
   );
 
+  // Guardar página actual en localStorage con timestamp para navegación
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      console.log('🔄 RETRO - Guardando en localStorage retro_navigation:', currentPage);
+      const navigationData = {
+        page: currentPage,
+        timestamp: Date.now()
+      };
+      localStorage.setItem('retro_navigation', JSON.stringify(navigationData));
+    }
+  }, [currentPage]);
+
   // Efecto inicial con cleanup
   useEffect(() => {
     fetchCamisas(currentPage, searchTerm);
+    
+    // Marcar que ya hemos inicializado después de la primera carga
+    setTimeout(() => {
+      hasInitialized.current = true;
+      setIsFirstLoad(false);
+      console.log('✅ RETRO - Inicialización completada');
+    }, 100);
 
     return () => {
       if (abortControllerRef.current) {
@@ -292,6 +357,14 @@ function CamisasRetroContent() {
   // Efecto para manejar cambios en itemsPerPage
   useEffect(() => {
     setPreference("itemsPerPage", itemsPerPage);
+    
+    // Si no hemos inicializado completamente, no resetear
+    if (!hasInitialized.current) {
+      console.log('🚫 RETRO - Saltando reset de página, aún inicializando');
+      return;
+    }
+    
+    console.log('✅ RETRO - Ejecutando reset de página por cambio de itemsPerPage');
     if (currentPage === 1) {
       fetchCamisas(1, searchTerm, false);
     } else {
