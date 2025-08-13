@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import NextImage from 'next/image';
 import cloudinaryOptimizer from '../lib/cloudinaryOptimizer';
 import advancedImageCache from '../lib/advancedImageCache';
+import mobileOptimizer from '../lib/mobileOptimizer';
 import { useSmartPreloader } from '../hooks/useSmartPreloader';
 
 /**
@@ -22,7 +23,7 @@ const UltraOptimizedImage = ({
   width,
   height,
   priority = false,
-  sizes = "(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw",
+  sizes,
   onLoad,
   onError,
   placeholder = "blur",
@@ -59,13 +60,20 @@ const UltraOptimizedImage = ({
     return generateGenericBlurDataURL();
   }, [src, blurDataURL]);
 
-  // Generar URLs optimizadas para diferentes tamaños
+  // Generar URLs optimizadas para diferentes tamaños (MÓVIL OPTIMIZADO)
   const generateResponsiveSources = useCallback((imageUrl) => {
     if (!responsive || !cloudinaryOptimizer.isCloudinaryUrl(imageUrl)) {
       return { optimizedUrl: imageUrl, srcSet: '' };
     }
 
-    const breakpoints = [
+    // CONFIGURACIÓN ESPECIAL PARA MÓVIL
+    const isMobile = mobileOptimizer.isMobile;
+    const breakpoints = isMobile ? [
+      // MÓVIL: Solo tamaños pequeños para carga rápida
+      { width: 300, media: '(max-width: 480px)' },
+      { width: 400, media: '(max-width: 768px)' }
+    ] : [
+      // DESKTOP: Tamaños normales
       { width: 400, media: '(max-width: 640px)' },
       { width: 600, media: '(max-width: 768px)' },
       { width: 800, media: '(max-width: 1024px)' },
@@ -74,19 +82,32 @@ const UltraOptimizedImage = ({
     ];
 
     const sources = breakpoints.map(bp => {
-      const optimizedUrl = cloudinaryOptimizer.optimizeUrl(imageUrl, {
-        width: bp.width,
-        quality: networkSpeed === 'slow' ? 60 : quality,
-        format: 'auto'
-      });
+      // USAR MOBILE OPTIMIZER para URLs móviles
+      const optimizedUrl = isMobile ? 
+        mobileOptimizer.optimizeCloudinaryUrl(imageUrl, {
+          width: bp.width,
+          quality: mobileOptimizer.getOptimalQuality()
+        }) :
+        cloudinaryOptimizer.optimizeUrl(imageUrl, {
+          width: bp.width,
+          quality: networkSpeed === 'slow' ? 60 : quality,
+          format: 'auto'
+        });
       return `${optimizedUrl} ${bp.width}w`;
     });
 
-    const mainOptimized = cloudinaryOptimizer.optimizeUrl(imageUrl, {
-      width: 800,
-      quality: networkSpeed === 'slow' ? 60 : quality,
-      format: 'auto'
-    });
+    // URL principal optimizada para móvil
+    const mainWidth = isMobile ? 400 : 800;
+    const mainOptimized = isMobile ?
+      mobileOptimizer.optimizeCloudinaryUrl(imageUrl, {
+        width: mainWidth,
+        quality: mobileOptimizer.getOptimalQuality()
+      }) :
+      cloudinaryOptimizer.optimizeUrl(imageUrl, {
+        width: mainWidth,
+        quality: networkSpeed === 'slow' ? 60 : quality,
+        format: 'auto'
+      });
 
     return {
       optimizedUrl: mainOptimized,
@@ -151,7 +172,12 @@ const UltraOptimizedImage = ({
 
     if (!imgRef.current) return;
 
-    // Configuración avanzada del observer
+    // Configuración avanzada del observer (MÓVIL OPTIMIZADO)
+    const mobileConfig = mobileOptimizer.getMobileLazyConfig();
+    const rootMargin = mobileOptimizer.isMobile ? 
+      mobileConfig.rootMargin : 
+      (networkSpeed === 'fast' ? '300px 0px' : '150px 0px');
+    
     observerRef.current = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
@@ -159,8 +185,8 @@ const UltraOptimizedImage = ({
         if (entry.isIntersecting) {
           setIsInView(true);
           
-          // Precargar siguientes imágenes si es estrategia inteligente
-          if (preloadStrategy === 'smart') {
+          // NO precargar en móvil para ahorrar datos
+          if (preloadStrategy === 'smart' && !mobileOptimizer.shouldUseDataSaver()) {
             observeElement(entry.target, src);
           }
           
@@ -171,8 +197,8 @@ const UltraOptimizedImage = ({
         }
       },
       {
-        rootMargin: networkSpeed === 'fast' ? '300px 0px' : '150px 0px',
-        threshold: 0.01
+        rootMargin,
+        threshold: mobileOptimizer.isMobile ? 0.1 : 0.01
       }
     );
 
@@ -283,7 +309,7 @@ const UltraOptimizedImage = ({
           height={!fill ? height : undefined}
           priority={priority}
           className={className}
-          sizes={sizes}
+          sizes={sizes || mobileOptimizer.getMobileSizes()}
           srcSet={responsiveSrcSet || undefined}
           placeholder={placeholder}
           blurDataURL={placeholder === "blur" ? getBlurDataURL() : undefined}
