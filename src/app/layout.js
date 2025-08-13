@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ServiceWorkerRegistration from "../components/ServiceWorkerRegistration";
+import ImageOptimizationManager from "../components/ImageOptimizationManager";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,7 +32,9 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50`}
       >
         <ServiceWorkerRegistration />
-        {children}
+        <ImageOptimizationManager>
+          {children}
+        </ImageOptimizationManager>
       </body>
     </html>
   );

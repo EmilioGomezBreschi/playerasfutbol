@@ -6,11 +6,13 @@
 class CloudinaryOptimizer {
   constructor() {
     this.defaultOptions = {
-      width: 800,
-      quality: 'auto',
+      width: 600, // Reducido para carga más rápida
+      quality: 'auto:low', // MÁS AGRESIVO
       format: 'auto',
       crop: 'scale',
-      gravity: 'auto'
+      gravity: 'auto',
+      fetch_format: 'auto', // Agregar fetch_format
+      flags: 'progressive' // Carga progresiva
     };
   }
 
@@ -25,15 +27,22 @@ class CloudinaryOptimizer {
       return url;
     }
 
-    // TEMPORALMENTE: No aplicar transformaciones a URLs que ya funcionan
-    // Las URLs de la base de datos ya están funcionando, no las modifiquemos
-    console.log('🚫 Cloudinary: Manteniendo URL original para evitar errores 400:', url);
+    // Aplicar optimizaciones inteligentes sin tokens extras
+    const config = { ...this.defaultOptions, ...options };
+    
+    // Generar transformaciones optimizadas
+    const transformations = this.generateSmartTransformations(config, url);
+    
+    // Solo aplicar si las transformaciones son seguras
+    if (transformations.length > 0) {
+      const optimized = this.applyTransformations(url, transformations);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('⚡ Cloudinary optimizado:', { original: url, optimized });
+      }
+      return optimized;
+    }
+    
     return url;
-
-    // TODO: Investigar qué transformaciones son compatibles con estas URLs
-    // const config = { ...this.defaultOptions, ...options };
-    // const transformations = this.generateTransformations(config);
-    // return this.applyTransformations(url, transformations);
   }
 
   /**
@@ -44,7 +53,25 @@ class CloudinaryOptimizer {
   }
 
   /**
-   * Genera las transformaciones de Cloudinary
+   * Genera transformaciones inteligentes que no consumen tokens extras
+   */
+  generateSmartTransformations(config, url) {
+    const transformations = [];
+    
+    // Solo aplicar si la URL no tiene versionado (v1234567890)
+    if (url.includes('/v') && url.match(/\/v\d{10}/)) {
+      // URL ya tiene versionado, aplicar solo optimizaciones básicas
+      transformations.push('f_auto'); // Formato automático (GRATIS)
+      transformations.push('q_auto:eco'); // Calidad económica (GRATIS)
+      return transformations;
+    }
+    
+    // Para URLs sin versionado, aplicar optimizaciones completas
+    return this.generateTransformations(config);
+  }
+
+  /**
+   * Genera las transformaciones de Cloudinary (método original)
    */
   generateTransformations(config) {
     const transformations = [];

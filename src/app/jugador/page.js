@@ -8,6 +8,7 @@ import Pagination from '../../components/Pagination';
 import SearchBar from '../../components/SearchBar';
 import ImageOptimizer from '../../components/ImageOptimizer';
 import ProgressiveImage from '../../components/ProgressiveImage';
+import UltraOptimizedImage from '../../components/UltraOptimizedImage';
 import { useImagePreloader } from '../../hooks/useImagePreloader';
 import ImagePreloader from '../../components/ImagePreloader';
 
@@ -61,13 +62,17 @@ const CamisaCard = ({ camisa, index }) => {
       <div className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-xl hover:border-gray-300 transition-all duration-300 transform hover:-translate-y-1">
         {/* Imagen */}
         <div className="aspect-square relative overflow-hidden bg-gray-50">
-          <ProgressiveImage
+          <UltraOptimizedImage
             src={camisa.imageUrl}
             alt={camisa.subcategoria}
             fill
             className="object-cover group-hover:scale-110 transition-transform duration-500"
             sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
-            priority={index < 8} // Prioridad para las primeras 8 imágenes
+            priority={index < 6}
+            quality="auto"
+            responsive={true}
+            cacheStrategy="aggressive"
+            preloadStrategy="smart"
           />
 
           {/* Overlay en hover */}
