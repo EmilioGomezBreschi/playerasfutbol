@@ -50,7 +50,11 @@ const UltraOptimizedImage = ({
   const observerRef = useRef(null);
   const { observeElement, unobserveElement, networkSpeed, preloadImage } = useSmartPreloader();
   const { isScrolling } = useMobileScrollOptimizer();
-  const { getLoadConfig, setPriority } = useBatchImageLoader(totalImages);
+  
+  // SEGURIDAD: Solo usar batch loader si totalImages > 0
+  const batchLoader = totalImages > 0 ? useBatchImageLoader(totalImages) : null;
+  const getLoadConfig = batchLoader?.getLoadConfig || (() => ({ shouldLoad: false }));
+  const setPriority = batchLoader?.setPriority || (() => {});
 
   // Generar blurDataURL automáticamente si no se proporciona
   const getBlurDataURL = useCallback(() => {

@@ -9,6 +9,7 @@ import SearchBar from '../../components/SearchBar';
 import ImageOptimizer from '../../components/ImageOptimizer';
 import ProgressiveImage from '../../components/ProgressiveImage';
 import UltraOptimizedImage from '../../components/UltraOptimizedImage';
+import SafeUltraOptimizedImage from '../../components/SafeUltraOptimizedImage';
 import { useImagePreloader } from '../../hooks/useImagePreloader';
 import { useSmartPreloader } from '../../hooks/useSmartPreloader';
 import { useUltraBoost } from '../../hooks/useUltraBoost';
@@ -66,7 +67,7 @@ const CamisaCard = ({ camisa, index }) => {
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-xl hover:border-gray-300 transition-all duration-300 transform hover:-translate-y-1">
         {/* Imagen */}
         <div className="aspect-square relative overflow-hidden bg-gray-50">
-          <UltraOptimizedImage
+          <SafeUltraOptimizedImage
             src={camisa.imageUrl}
             alt={camisa.subcategoria}
             fill
@@ -74,11 +75,6 @@ const CamisaCard = ({ camisa, index }) => {
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
             priority={index < 6}
             quality="auto"
-            responsive={true}
-            cacheStrategy="aggressive"
-            preloadStrategy="smart"
-            imageIndex={index}
-            totalImages={camisas.length}
           />
 
           {/* Overlay en hover */}
@@ -671,7 +667,7 @@ export default function CamisasRetro() {
       </div>
     }>
       <CamisasRetroContent />
-      <BatchLoadingMonitor totalImages={100} />
+      {/* <BatchLoadingMonitor totalImages={100} /> */}
     </Suspense>
   );
 }

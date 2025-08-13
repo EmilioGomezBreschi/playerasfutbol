@@ -19,9 +19,10 @@ export const useMobileScrollOptimizer = () => {
     return timeDiff < 16;
   }, []);
 
-  // Optimizar scroll para móvil
+  // Optimizar scroll para móvil (SEGURO)
   useEffect(() => {
-    if (!mobileOptimizer.isMobile) return;
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+    if (!isMobile) return;
 
     let rafId;
     let scrollCount = 0;
@@ -106,7 +107,7 @@ export const useMobileScrollOptimizer = () => {
 
   return {
     isScrolling,
-    isMobile: mobileOptimizer.isMobile
+    isMobile: typeof window !== 'undefined' && window.innerWidth <= 768
   };
 };
 

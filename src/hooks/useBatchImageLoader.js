@@ -9,15 +9,18 @@ export const useBatchImageLoader = (totalImages = 0) => {
   const [currentBatch, setCurrentBatch] = useState(0);
   const [loadedBatches, setLoadedBatches] = useState(new Set());
   const [priorityImages, setPriorityImages] = useState(new Set());
-  const batchSizeRef = useRef(mobileOptimizer.isMobile ? 4 : 6);
+  
+  // SEGURIDAD: Verificar que mobileOptimizer existe
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+  const batchSizeRef = useRef(isMobile ? 4 : 6);
   const loadingBatchRef = useRef(false);
 
-  // Configuración dinámica según dispositivo
+  // Configuración dinámica según dispositivo (SEGURA)
   const config = {
     batchSize: batchSizeRef.current,
-    maxConcurrent: mobileOptimizer.isMobile ? 2 : 4,
-    preloadDistance: mobileOptimizer.isMobile ? 1 : 2, // Lotes por adelantado
-    loadDelay: mobileOptimizer.isMobile ? 200 : 100
+    maxConcurrent: isMobile ? 2 : 4,
+    preloadDistance: isMobile ? 1 : 2, // Lotes por adelantado
+    loadDelay: isMobile ? 200 : 100
   };
 
   console.log('📦 BATCH LOADER configurado:', config);
