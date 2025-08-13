@@ -7,6 +7,7 @@ import advancedImageCache from '../lib/advancedImageCache';
 import mobileOptimizer from '../lib/mobileOptimizer';
 import { useSmartPreloader } from '../hooks/useSmartPreloader';
 import { useMobileScrollOptimizer } from '../hooks/useMobileScrollOptimizer';
+import { useBatchImageLoader } from '../hooks/useBatchImageLoader';
 
 /**
  * Componente de imagen ultra-optimizado con todas las mejoras avanzadas
@@ -33,6 +34,8 @@ const UltraOptimizedImage = ({
   responsive = true,
   cacheStrategy = "aggressive",
   preloadStrategy = "smart",
+  imageIndex = 0, // NUEVO: Índice para batch loading
+  totalImages = 0, // NUEVO: Total de imágenes
   ...props
 }) => {
   const [currentSrc, setCurrentSrc] = useState('');
@@ -47,6 +50,7 @@ const UltraOptimizedImage = ({
   const observerRef = useRef(null);
   const { observeElement, unobserveElement, networkSpeed, preloadImage } = useSmartPreloader();
   const { isScrolling } = useMobileScrollOptimizer();
+  const { getLoadConfig, setPriority } = useBatchImageLoader(totalImages);
 
   // Generar blurDataURL automáticamente si no se proporciona
   const getBlurDataURL = useCallback(() => {
@@ -165,10 +169,16 @@ const UltraOptimizedImage = ({
     }
   }, [cacheStrategy, generateResponsiveSources, onLoad, onError]);
 
+  // Obtener configuración de carga por lotes
+  const loadConfig = getLoadConfig(imageIndex);
+  const shouldUseBatchPriority = totalImages > 0 && loadConfig.shouldLoad;
+  const effectivePriority = priority || shouldUseBatchPriority;
+
   // Configurar Intersection Observer ultra-optimizado
   useEffect(() => {
-    if (priority) {
+    if (effectivePriority) {
       setIsInView(true);
+      setPriority(imageIndex); // Notificar al batch loader
       return;
     }
 
@@ -192,6 +202,7 @@ const UltraOptimizedImage = ({
           }
           
           setIsInView(true);
+          setPriority(imageIndex); // Activar prioridad en batch loader
           
           // NUNCA precargar en móvil
           if (!mobileOptimizer.isMobile && preloadStrategy === 'smart' && !mobileOptimizer.shouldUseDataSaver()) {
@@ -228,7 +239,7 @@ const UltraOptimizedImage = ({
       const priorityLevel = priority ? 'high' : 'medium';
       loadImageWithCache(src, priorityLevel);
     }
-  }, [isInView, src, currentSrc, priority, loadImageWithCache]);
+  }, [isInView, src, currentSrc, effectivePriority, loadImageWithCache]);
 
   // Limpiar URLs objeto cuando se desmonta
   useEffect(() => {

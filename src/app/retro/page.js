@@ -14,6 +14,7 @@ import { useSmartPreloader } from '../../hooks/useSmartPreloader';
 import { useUltraBoost } from '../../hooks/useUltraBoost';
 import { useMobileScrollOptimizer } from '../../hooks/useMobileScrollOptimizer';
 import ImagePreloader from '../../components/ImagePreloader';
+import BatchLoadingMonitor from '../../components/BatchLoadingMonitor';
 
 // Hooks personalizados para cookies
 const useCookies = () => {
@@ -76,6 +77,8 @@ const CamisaCard = ({ camisa, index }) => {
             responsive={true}
             cacheStrategy="aggressive"
             preloadStrategy="smart"
+            imageIndex={index}
+            totalImages={camisas.length}
           />
 
           {/* Overlay en hover */}
@@ -668,6 +671,7 @@ export default function CamisasRetro() {
       </div>
     }>
       <CamisasRetroContent />
+      <BatchLoadingMonitor totalImages={100} />
     </Suspense>
   );
 }
