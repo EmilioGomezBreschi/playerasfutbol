@@ -8,59 +8,7 @@ import ImageOptimizer from "../components/ImageOptimizer";
 import { useImagePreloader } from "../hooks/useImagePreloader";
 import ImagePreloader from "../components/ImagePreloader";
 
-// Componente de imagen optimizada con fallback
-const OptimizedImage = ({ src, alt, className, priority = false }) => {
-  const [imageError, setImageError] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
-  const handleError = () => {
-    setImageError(true);
-    setIsLoading(false);
-  };
-
-  const handleLoad = () => {
-    setIsLoading(false);
-  };
-
-  if (imageError) {
-    // Fallback para móviles problemáticos
-    return (
-      <img
-        src={src}
-        alt={alt}
-        className={className}
-        style={{
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-        }}
-        loading={priority ? "eager" : "lazy"}
-      />
-    );
-  }
-
-  return (
-    <>
-      {isLoading && (
-        <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-t-lg" />
-      )}
-      <Image
-        src={src}
-        alt={alt}
-        fill
-        priority={priority}
-        className={className}
-        sizes="(max-width: 768px) 100vw, 33vw"
-        style={{
-          objectFit: "cover",
-        }}
-        onError={handleError}
-        onLoad={handleLoad}
-        unoptimized={true}
-      />
-    </>
-  );
-};
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -159,11 +107,12 @@ export default function Home() {
           className="flex items-center justify-center w-12 h-12 md:w-14 md:h-14 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 group"
           aria-label="Síguenos en Instagram"
         >
-          <Image
+          <ImageOptimizer
             src="/ig.svg"
             alt="Instagram"
             width={24}
             height={24}
+            priority={true}
             className="w-6 h-6 md:w-7 md:h-7 filter brightness-0 invert group-hover:scale-110 transition-transform duration-300"
           />
         </a>
@@ -206,11 +155,13 @@ export default function Home() {
                 >
                   <div className="bg-gray-50 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
                     <div className="aspect-square relative">
-                      <img
-                        src={c.imageUrl}
-                        alt={c.subcategoria}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
+                                             <ImageOptimizer
+                         src={c.imageUrl}
+                         alt={c.subcategoria}
+                         fill
+                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                         priority={i < 4}
+                       />
                       <span
                         className={`absolute top-2 left-2 text-xs px-2 py-1 rounded-full text-white ${
                           c.categoria === "RETRO"
@@ -261,9 +212,11 @@ export default function Home() {
               onClick={() => (window.location.href = "/retro?page=1")}
             >
               <div className="flex grow w-full h-48 rounded-t-lg">
-                <img
+                <ImageOptimizer
                   src="/retro.jpeg"
                   alt="Camisas Retro"
+                  fill
+                  priority={true}
                   className="w-full h-full object-cover md:opacity-70 md:hover:opacity-100 transition-opacity duration-300 ease-out rounded-t-lg"
                 />
               </div>
@@ -277,9 +230,11 @@ export default function Home() {
               onClick={() => (window.location.href = "/jugador?page=1")}
             >
               <div className="flex grow w-full h-48 rounded-t-lg">
-                <img
+                <ImageOptimizer
                   src="/jugador.jpeg"
                   alt="Camisas de Jugador"
+                  fill
+                  priority={true}
                   className="w-full h-full object-cover md:opacity-70 md:hover:opacity-100 transition-opacity duration-300 ease-out rounded-t-lg"
                 />
               </div>
@@ -293,9 +248,11 @@ export default function Home() {
               onClick={() => (window.location.href = "/aficionado?page=1")}
             >
               <div className="flex grow w-full h-48 rounded-t-lg">
-                <img
+                <ImageOptimizer
                   src="/aficionado.jpeg"
                   alt="Camisas de Aficionado"
+                  fill
+                  priority={true}
                   className="w-full h-full object-cover md:opacity-70 md:hover:opacity-100 transition-opacity duration-300 ease-out rounded-t-lg"
                 />
               </div>
@@ -309,11 +266,12 @@ export default function Home() {
           <footer className="mt-8 text-center text-sm flex flex-col md:flex-row justify-around w-full space-y-6 md:space-y-0">
             <div className="flex items-center flex-col space-y-3">
               <div className="w-16 h-16 bg-purple-700/70 rounded-full flex justify-center items-center">
-                <Image
+                <ImageOptimizer
                   src="/images/shirtorange.svg"
                   alt="Retro Auténticas"
                   width={40}
                   height={40}
+                  priority={true}
                   className="opacity-70 hover:opacity-100 hover:scale-110 transition-transform duration-300 ease-out"
                 />
               </div>
@@ -326,11 +284,12 @@ export default function Home() {
             </div>
             <div className="flex items-center flex-col space-y-3">
               <div className="w-16 h-16 bg-blue-900/70 rounded-full flex justify-center items-center">
-                <Image
+                <ImageOptimizer
                   src="/images/star.svg"
                   alt="Calidad Jugador"
                   width={40}
                   height={40}
+                  priority={true}
                   className="opacity-70 hover:opacity-100 hover:scale-110 transition-transform duration-300 ease-out"
                 />
               </div>
@@ -343,11 +302,12 @@ export default function Home() {
             </div>
             <div className="flex items-center flex-col space-y-3">
               <div className="w-16 h-16 bg-green-500/70 rounded-full flex justify-center items-center">
-                <Image
+                <ImageOptimizer
                   src="/images/heart.svg"
                   alt="Para aficionados"
                   width={40}
                   height={40}
+                  priority={true}
                   className="opacity-70 hover:opacity-100 hover:scale-110 transition-transform duration-300 ease-out"
                 />
               </div>
