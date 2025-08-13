@@ -9,14 +9,15 @@ class MobileOptimizer {
     this.connectionType = this.detectConnection();
     this.deviceSpecs = this.getDeviceSpecs();
     
-    // Configuración ultra-agresiva para móvil
+    // Configuración EXTREMA para móvil
     this.mobileConfig = {
-      maxImageWidth: this.isMobile ? 400 : 800,
+      maxImageWidth: this.isMobile ? 250 : 800, // ULTRA-PEQUEÑO (era 400)
       quality: this.getOptimalQuality(),
-      preloadLimit: this.isMobile ? 1 : 3,
-      cacheLimit: this.isMobile ? 5 : 15,
-      lazyThreshold: this.isMobile ? '50px' : '200px',
-      timeout: this.isMobile ? 8000 : 3000
+      preloadLimit: this.isMobile ? 0 : 3, // CERO precarga (era 1)
+      cacheLimit: this.isMobile ? 2 : 15, // MÍNIMO cache (era 5)
+      lazyThreshold: this.isMobile ? '20px' : '200px', // ULTRA-CERCANO (era 50px)
+      timeout: this.isMobile ? 15000 : 3000, // MÁS TOLERANTE (era 8000)
+      scrollDebounce: this.isMobile ? 100 : 0 // DEBOUNCE para scroll
     };
 
     console.log('📱 MOBILE OPTIMIZER:', {
@@ -73,16 +74,16 @@ class MobileOptimizer {
   getOptimalQuality() {
     if (!this.isMobile) return 'auto';
     
-    // Calidad ultra-agresiva para móvil según conexión
-    if (this.connectionType.effectiveType === 'slow-2g') return 30;
-    if (this.connectionType.effectiveType === '2g') return 40;
-    if (this.connectionType.effectiveType === '3g') return 50;
-    if (this.connectionType.effectiveType === '4g') return 60;
+    // Calidad EXTREMA para móvil según conexión
+    if (this.connectionType.effectiveType === 'slow-2g') return 20; // ULTRA-AGRESIVO
+    if (this.connectionType.effectiveType === '2g') return 25; // ULTRA-AGRESIVO
+    if (this.connectionType.effectiveType === '3g') return 35; // ULTRA-AGRESIVO
+    if (this.connectionType.effectiveType === '4g') return 45; // ULTRA-AGRESIVO
     
     // Fallback basado en saveData
-    if (this.connectionType.saveData) return 35;
+    if (this.connectionType.saveData) return 25; // ULTRA-AGRESIVO
     
-    return 50; // Default móvil
+    return 35; // Default móvil ULTRA-AGRESIVO
   }
 
   optimizeCloudinaryUrl(url, customOptions = {}) {

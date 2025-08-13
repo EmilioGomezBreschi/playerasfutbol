@@ -6,6 +6,7 @@ import cloudinaryOptimizer from '../lib/cloudinaryOptimizer';
 import advancedImageCache from '../lib/advancedImageCache';
 import mobileOptimizer from '../lib/mobileOptimizer';
 import { useSmartPreloader } from '../hooks/useSmartPreloader';
+import { useMobileScrollOptimizer } from '../hooks/useMobileScrollOptimizer';
 
 /**
  * Componente de imagen ultra-optimizado con todas las mejoras avanzadas
@@ -45,6 +46,7 @@ const UltraOptimizedImage = ({
   const imgRef = useRef(null);
   const observerRef = useRef(null);
   const { observeElement, unobserveElement, networkSpeed, preloadImage } = useSmartPreloader();
+  const { isScrolling } = useMobileScrollOptimizer();
 
   // Generar blurDataURL automáticamente si no se proporciona
   const getBlurDataURL = useCallback(() => {
@@ -66,12 +68,12 @@ const UltraOptimizedImage = ({
       return { optimizedUrl: imageUrl, srcSet: '' };
     }
 
-    // CONFIGURACIÓN ESPECIAL PARA MÓVIL
+    // CONFIGURACIÓN EXTREMA PARA MÓVIL
     const isMobile = mobileOptimizer.isMobile;
     const breakpoints = isMobile ? [
-      // MÓVIL: Solo tamaños pequeños para carga rápida
-      { width: 300, media: '(max-width: 480px)' },
-      { width: 400, media: '(max-width: 768px)' }
+      // MÓVIL: Tamaños ULTRA-PEQUEÑOS para scroll rápido
+      { width: 200, media: '(max-width: 480px)' }, // ERA 300
+      { width: 250, media: '(max-width: 768px)' }  // ERA 400
     ] : [
       // DESKTOP: Tamaños normales
       { width: 400, media: '(max-width: 640px)' },
@@ -96,8 +98,8 @@ const UltraOptimizedImage = ({
       return `${optimizedUrl} ${bp.width}w`;
     });
 
-    // URL principal optimizada para móvil
-    const mainWidth = isMobile ? 400 : 800;
+    // URL principal optimizada para móvil EXTREMO
+    const mainWidth = isMobile ? 250 : 800; // ERA 400
     const mainOptimized = isMobile ?
       mobileOptimizer.optimizeCloudinaryUrl(imageUrl, {
         width: mainWidth,
@@ -172,10 +174,10 @@ const UltraOptimizedImage = ({
 
     if (!imgRef.current) return;
 
-    // Configuración avanzada del observer (MÓVIL OPTIMIZADO)
+    // Configuración EXTREMA del observer para móvil
     const mobileConfig = mobileOptimizer.getMobileLazyConfig();
     const rootMargin = mobileOptimizer.isMobile ? 
-      mobileConfig.rootMargin : 
+      '20px 0px' : // ULTRA-CERCANO para scroll rápido
       (networkSpeed === 'fast' ? '300px 0px' : '150px 0px');
     
     observerRef.current = new IntersectionObserver(
@@ -183,10 +185,16 @@ const UltraOptimizedImage = ({
         const [entry] = entries;
         
         if (entry.isIntersecting) {
+          // NO cargar durante scroll rápido en móvil
+          if (mobileOptimizer.isMobile && isScrolling()) {
+            console.log('📱 ⏸️ Pausando carga durante scroll rápido');
+            return;
+          }
+          
           setIsInView(true);
           
-          // NO precargar en móvil para ahorrar datos
-          if (preloadStrategy === 'smart' && !mobileOptimizer.shouldUseDataSaver()) {
+          // NUNCA precargar en móvil
+          if (!mobileOptimizer.isMobile && preloadStrategy === 'smart' && !mobileOptimizer.shouldUseDataSaver()) {
             observeElement(entry.target, src);
           }
           
@@ -198,7 +206,7 @@ const UltraOptimizedImage = ({
       },
       {
         rootMargin,
-        threshold: mobileOptimizer.isMobile ? 0.1 : 0.01
+        threshold: mobileOptimizer.isMobile ? 0.25 : 0.01 // MÁS ESTRICTO para móvil
       }
     );
 

@@ -21,11 +21,18 @@ class AdvancedImageCache {
     try {
       this.db = await this.openDB();
       
-      // LIMPIEZA INTELIGENTE para navegación multi-página
+      // LIMPIEZA EXTREMA para móvil
       const stats = await this.getCacheStats();
-      if (stats.entries > 15) {
-        console.log('🧹 LIMPIEZA INTELIGENTE: Optimizando cache con', stats.entries, 'imágenes');
-        await this.enforceImageCacheLimit(); // LIMPIAR EXCESO, NO TODO
+      const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+      const maxEntries = isMobile ? 2 : 15; // ULTRA-LIMITADO en móvil
+      
+      if (stats.entries > maxEntries) {
+        console.log('🧹 LIMPIEZA EXTREMA MÓVIL: Optimizando cache con', stats.entries, 'imágenes');
+        if (isMobile && stats.entries > 5) {
+          await this.clearCache(); // LIMPIAR TODO en móvil si > 5
+        } else {
+          await this.enforceImageCacheLimit(); // LIMPIAR EXCESO
+        }
       }
       
       this.cleanOldEntries();

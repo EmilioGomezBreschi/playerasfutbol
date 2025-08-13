@@ -12,6 +12,7 @@ import UltraOptimizedImage from '../../components/UltraOptimizedImage';
 import { useImagePreloader } from '../../hooks/useImagePreloader';
 import { useSmartPreloader } from '../../hooks/useSmartPreloader';
 import { useUltraBoost } from '../../hooks/useUltraBoost';
+import { useMobileScrollOptimizer } from '../../hooks/useMobileScrollOptimizer';
 import ImagePreloader from '../../components/ImagePreloader';
 
 // Hooks personalizados para cookies
@@ -149,6 +150,7 @@ function CamisasRetroContent() {
   const searchParams = useSearchParams();
   const { getPreference, setPreference } = usePreferences();
   const { triggerUltraBoost } = useUltraBoost(); // 🚀 ULTRA-BOOST ACTIVADO
+  const { isScrolling, isMobile } = useMobileScrollOptimizer(); // 📱 SCROLL MÓVIL OPTIMIZADO
 
   // Estados principales
   const [camisas, setCamisas] = useState([]);
