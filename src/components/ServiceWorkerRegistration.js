@@ -4,7 +4,34 @@ import { useEffect } from 'react';
 
 const ServiceWorkerRegistration = () => {
   useEffect(() => {
+    // Limpiar cualquier Service Worker existente
     if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for(let registration of registrations) {
+          registration.unregister().then((success) => {
+            if (success) {
+              console.log('🧹 Service Worker desregistrado exitosamente');
+            }
+          });
+        }
+      });
+      
+      // Limpiar caches del Service Worker
+      if ('caches' in window) {
+        caches.keys().then((cacheNames) => {
+          return Promise.all(
+            cacheNames.map((cacheName) => {
+              console.log('🗑️ Eliminando cache:', cacheName);
+              return caches.delete(cacheName);
+            })
+          );
+        });
+      }
+    }
+    return;
+    
+    // CÓDIGO ORIGINAL COMENTADO:
+    if (false && typeof window !== 'undefined' && 'serviceWorker' in navigator) {
       // Registrar service worker
       navigator.serviceWorker
         .register('/sw.js')

@@ -2,13 +2,12 @@
 
 import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import NextImage from "next/image";
 import SearchBar from "../components/SearchBar";
 import ImageOptimizer from "../components/ImageOptimizer";
+import ProgressiveImage from "../components/ProgressiveImage";
 import { useImagePreloader } from "../hooks/useImagePreloader";
 import ImagePreloader from "../components/ImagePreloader";
-
-
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -146,73 +145,69 @@ export default function Home() {
           </h3>
 
           {allResults.length > 0 ? (
-            <div className="grid gap-4 gap-y-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 m-7">
-              {allResults.map((c, i) => (
-                <Link
-                  key={i}
-                  href={`/camisa/${encodeURIComponent(c.subcategoria)}`}
-                  className="group block mb-6"
-                >
-                  <div className="bg-gray-50 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
-                    <div className="aspect-square relative">
-                                             <ImageOptimizer
-                         src={c.imageUrl}
-                         alt={c.subcategoria}
-                         fill
-                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                         priority={i < 4}
-                       />
-                      <span
-                        className={`absolute top-2 left-2 text-xs px-2 py-1 rounded-full text-white ${
-                          c.categoria === "RETRO"
-                            ? "bg-purple-600"
-                            : c.categoria === "JUGADOR" ||
-                              c.categoria === "JUGADOR2"
-                            ? "bg-blue-600"
-                            : "bg-green-600"
-                        }`}
-                      >
-                        {c.categoria}
-                      </span>
+            <>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mb-8">
+                {allResults.map((c, i) => (
+                  <Link
+                    key={c._id}
+                    href={`/camisa/${encodeURIComponent(c.subcategoria)}?page=1`}
+                    className="group bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-300"
+                  >
+                    <div className="relative aspect-square overflow-hidden">
+                      <ImageOptimizer
+                        src={c.imageUrl}
+                        alt={c.subcategoria}
+                        fill
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        priority={i < 4}
+                      />
                     </div>
                     <div className="p-3">
-                      <h4 className="font-medium text-sm text-gray-900 line-clamp-2">
+                      <h3 className="text-sm font-medium text-gray-900 truncate">
                         {c.subcategoria}
-                      </h4>
+                      </h3>
+                      <p className="text-xs text-gray-500 mt-1">{c.categoria}</p>
                     </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          ) : (
-            <p className="text-gray-500 text-center py-8">
-              No se encontraron camisas
-            </p>
-          )}
+                  </Link>
+                ))}
+              </div>
 
-          {/* Botón “Cargar más” */}
-          {allResults.length < searchResults.pagination.totalCamisas && (
-            <div className="text-center mt-6">
+              {/* Botón de cargar más */}
+              {searchResults?.pagination?.currentPage <
+                searchResults?.pagination?.totalPages && (
+                <div className="text-center">
+                  <button
+                    onClick={loadMore}
+                    disabled={isSearching}
+                    className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300"
+                  >
+                    {isSearching ? "Cargando..." : "Cargar más resultados"}
+                  </button>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-gray-500 text-lg">No se encontraron resultados</p>
               <button
-                onClick={loadMore}
-                disabled={isSearching}
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                onClick={() => setSearchTerm("")}
+                className="mt-4 text-blue-600 hover:text-blue-800 underline"
               >
-                {isSearching ? "Cargando..." : "Cargar más"}
+                Volver al catálogo
               </button>
             </div>
           )}
         </div>
       ) : (
         <>
-          {/* Botones de categoría */}
+          {/* Catálogo Principal - Navegación por categorías */}
           <div className="flex md:flex-row flex-col justify-around w-auto md:w-full md:space-x-7 space-y-7 md:space-y-0 grow">
             <button
               className="flex flex-col w-full rounded-lg border cursor-pointer min-h-80 overflow-hidden"
               onClick={() => (window.location.href = "/retro?page=1")}
             >
               <div className="flex grow w-full h-48 rounded-t-lg">
-                <ImageOptimizer
+                <ProgressiveImage
                   src="/retro.jpeg"
                   alt="Camisas Retro"
                   fill
@@ -230,7 +225,7 @@ export default function Home() {
               onClick={() => (window.location.href = "/jugador?page=1")}
             >
               <div className="flex grow w-full h-48 rounded-t-lg">
-                <ImageOptimizer
+                <ProgressiveImage
                   src="/jugador.jpeg"
                   alt="Camisas de Jugador"
                   fill
@@ -248,7 +243,7 @@ export default function Home() {
               onClick={() => (window.location.href = "/aficionado?page=1")}
             >
               <div className="flex grow w-full h-48 rounded-t-lg">
-                <ImageOptimizer
+                <ProgressiveImage
                   src="/aficionado.jpeg"
                   alt="Camisas de Aficionado"
                   fill

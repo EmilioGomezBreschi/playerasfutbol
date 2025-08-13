@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
+import NextImage from 'next/image';
 import ImageOptimizer from '../../../components/ImageOptimizer';
+import ProgressiveImage from '../../../components/ProgressiveImage';
 
 export default function DetalleCamisa() {
   const { subcategoria } = useParams();
@@ -168,14 +169,13 @@ export default function DetalleCamisa() {
           {/* Imagen Principal */}
           <div className="space-y-4">
             <div className="aspect-square relative overflow-hidden rounded-lg bg-white shadow-lg">
-              <ImageOptimizer
+              <ProgressiveImage
                 src={data.images[imagenSeleccionada].imageUrl}
                 alt={`${data.subcategoria} - Imagen ${imagenSeleccionada + 1}`}
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 priority={true}
-                placeholder="blur"
               />
             </div>
 
@@ -203,7 +203,7 @@ export default function DetalleCamisa() {
             }
           `}
                     >
-                      <ImageOptimizer
+                      <ProgressiveImage
                         src={imagen.imageUrl}
                         alt={`${data.subcategoria} - Miniatura ${index + 1}`}
                         fill

@@ -1,48 +1,66 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import NextImage from 'next/image';
 import cloudinaryOptimizer from '../lib/cloudinaryOptimizer';
 
-// Componente de imagen optimizada con precarga y lazy loading inteligente
-const ImageOptimizer = ({ 
-  src, 
-  alt, 
-  className, 
-  priority = false, 
-  sizes = "(max-width: 768px) 100vw, 33vw",
+/**
+ * Componente de imagen progresiva simplificado y confiable
+ * Carga optimizada con Cloudinary automáticamente
+ */
+const ProgressiveImage = ({
+  src,
+  alt,
+  className = "",
   fill = true,
   width,
   height,
+  priority = false,
+  sizes = "(max-width: 768px) 100vw, 33vw",
   onLoad,
   onError,
   placeholder = "blur",
   blurDataURL = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k=",
-  ...props 
+  ...props
 }) => {
-  const [imageError, setImageError] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isInView, setIsInView] = useState(false);
-  const [imageSrc, setImageSrc] = useState(placeholder === "blur" ? blurDataURL : src);
   const [optimizedSrc, setOptimizedSrc] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+  const [isInView, setIsInView] = useState(priority);
+  
   const imgRef = useRef(null);
   const observerRef = useRef(null);
 
-  // Optimizar URL de Cloudinary automáticamente
+  // Optimizar URL de Cloudinary
   useEffect(() => {
     if (src) {
-      const optimized = cloudinaryOptimizer.optimizeUrl(src, {
-        width: 800,
-        quality: 'auto',
-        format: 'auto'
-      });
-      setOptimizedSrc(optimized);
+      try {
+        const optimized = cloudinaryOptimizer.optimizeUrl(src, {
+          width: 800,
+          quality: 'auto',
+          format: 'auto'
+        });
+        setOptimizedSrc(optimized);
+        
+        // Debug log para desarrollo
+        if (process.env.NODE_ENV === 'development') {
+          console.log('🖼️ Imagen optimizada:', { original: src, optimized });
+        }
+      } catch (error) {
+        console.error('Error optimizando URL:', error);
+        setOptimizedSrc(src); // Usar la URL original si falla la optimización
+      }
     }
   }, [src]);
 
   // Intersection Observer para lazy loading
   useEffect(() => {
-    if (priority || !imgRef.current) return;
+    if (priority) {
+      setIsInView(true);
+      return;
+    }
+
+    if (!imgRef.current) return;
 
     observerRef.current = new IntersectionObserver(
       ([entry]) => {
@@ -54,7 +72,7 @@ const ImageOptimizer = ({
         }
       },
       {
-        rootMargin: '50px 0px', // Precarga 50px antes de que sea visible
+        rootMargin: '50px 0px',
         threshold: 0.01
       }
     );
@@ -68,42 +86,26 @@ const ImageOptimizer = ({
     };
   }, [priority]);
 
-  // Precarga de imagen cuando entra en vista
-  useEffect(() => {
-    if (isInView && !priority && optimizedSrc) {
-      const img = new window.Image();
-      img.onload = () => {
-        setImageSrc(optimizedSrc);
-        setIsLoading(false);
-      };
-      img.onerror = () => {
-        setImageError(true);
-        setIsLoading(false);
-      };
-      img.src = optimizedSrc;
-    }
-  }, [isInView, optimizedSrc, priority]);
-
-  // Precarga inmediata si es prioritaria
-  useEffect(() => {
-    if (priority && optimizedSrc) {
-      setImageSrc(optimizedSrc);
-    }
-  }, [priority, optimizedSrc]);
-
-  const handleLoad = useCallback(() => {
+  // Handlers
+  const handleLoad = () => {
     setIsLoading(false);
     onLoad?.();
-  }, [onLoad]);
+  };
 
-  const handleError = useCallback(() => {
-    setImageError(true);
+  const handleError = (event) => {
+    console.error('❌ Error cargando imagen:', {
+      src: optimizedSrc,
+      original: src,
+      errorEvent: event?.type || 'unknown',
+      target: event?.target?.src || 'unknown'
+    });
+    setIsError(true);
     setIsLoading(false);
-    onError?.();
-  }, [onError]);
+    onError?.(event);
+  };
 
-  // Si hay error, mostrar fallback
-  if (imageError) {
+  // Error fallback
+  if (isError) {
     return (
       <div 
         ref={imgRef}
@@ -139,29 +141,31 @@ const ImageOptimizer = ({
         </div>
       )}
 
-      {/* Imagen real */}
-      <NextImage
-        src={imageSrc}
-        alt={alt}
-        fill={fill}
-        width={!fill ? width : undefined}
-        height={!fill ? height : undefined}
-        priority={priority}
-        className={className}
-        sizes={sizes}
-        placeholder={placeholder}
-        blurDataURL={blurDataURL}
-        onLoad={handleLoad}
-        onError={handleError}
-        style={{
-          objectFit: 'cover',
-          opacity: isLoading ? 0 : 1,
-          transition: 'opacity 0.3s ease-in-out'
-        }}
-        {...props}
-      />
+      {/* Imagen optimizada */}
+      {isInView && optimizedSrc && (
+        <NextImage
+          src={optimizedSrc}
+          alt={alt}
+          fill={fill}
+          width={!fill ? width : undefined}
+          height={!fill ? height : undefined}
+          priority={priority}
+          className={className}
+          sizes={sizes}
+          placeholder={placeholder}
+          blurDataURL={blurDataURL}
+          onLoad={handleLoad}
+          onError={handleError}
+          style={{
+            objectFit: 'cover',
+            opacity: isLoading ? 0 : 1,
+            transition: 'opacity 0.5s ease-in-out'
+          }}
+          {...props}
+        />
+      )}
     </div>
   );
 };
 
-export default ImageOptimizer;
+export default ProgressiveImage;
