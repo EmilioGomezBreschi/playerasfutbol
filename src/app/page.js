@@ -4,6 +4,9 @@ import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import SearchBar from "../components/SearchBar";
+import ImageOptimizer from "../components/ImageOptimizer";
+import { useImagePreloader } from "../hooks/useImagePreloader";
+import ImagePreloader from "../components/ImagePreloader";
 
 // Componente de imagen optimizada con fallback
 const OptimizedImage = ({ src, alt, className, priority = false }) => {
@@ -53,6 +56,7 @@ const OptimizedImage = ({ src, alt, className, priority = false }) => {
         }}
         onError={handleError}
         onLoad={handleLoad}
+        unoptimized={true}
       />
     </>
   );
@@ -64,6 +68,24 @@ export default function Home() {
   const [allResults, setAllResults] = useState([]);
   const [page, setPage] = useState(1);
   const [isSearching, setIsSearching] = useState(false);
+
+  // Hook para precarga de imágenes
+  const { preloadCriticalImages } = useImagePreloader();
+
+  // Imágenes críticas para precargar (categorías principales)
+  const criticalImages = [
+    "/retro.jpeg",
+    "/jugador.jpeg", 
+    "/aficionado.jpeg",
+    "/images/shirtorange.svg",
+    "/images/star.svg",
+    "/images/heart.svg"
+  ];
+
+  // Precarga imágenes críticas al montar el componente
+  useEffect(() => {
+    preloadCriticalImages(criticalImages);
+  }, [preloadCriticalImages]);
 
   // Cuando searchTerm quede vacío, volvemos al catálogo
   useEffect(() => {
@@ -124,7 +146,11 @@ export default function Home() {
   }, [fetchPage, page, searchTerm]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-5 pb-10 relative bg-white text-gray-900">
+    <>
+      {/* Precarga de imágenes críticas */}
+      <ImagePreloader images={criticalImages} />
+      
+      <main className="flex min-h-screen flex-col items-center p-5 pb-10 relative bg-white text-gray-900">
       <div className="fixed top-4 right-4 z-50">
         <a
           href="https://instagram.com/retrojerseys_gdl"
@@ -335,6 +361,7 @@ export default function Home() {
           </footer>
         </>
       )}
-    </main>
+      </main>
+    </>
   );
 }
